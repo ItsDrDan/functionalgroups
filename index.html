@@ -119,6 +119,13 @@ details.directions .tip{margin:8px 18px 16px;background:#fff6d6;border-radius:12
  .mode-xp{grid-template-columns:repeat(2,1fr)}
 }
 .video-wrap{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#222}.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+.rarrow{flex:none}
+@media(max-width:700px){
+ .options.struct-opts{grid-template-columns:1fr!important}
+ .rxn{flex-direction:column;gap:2px}.rxn .rarrow{flex-direction:row;gap:10px;margin:8px 0}.rxn .rg{display:inline-block;transform:rotate(90deg)}.rxn .plus{padding:0}
+ .struct{padding:4px}.struct svg.mol,.rxn svg.mol,.opt-body svg.mol{width:auto;max-width:100%;height:auto}
+}
 </style></head>
 <body>
 <div class="celebrate" id="celebrate"></div><div class="toast" id="toast" role="status"></div>
@@ -319,8 +326,8 @@ function bag(list){let b=[],last=null;return ()=>{if(!b.length){b=shuf(list);if(
 const spotBag=bag(Object.keys(GN)),nameBag=bag(['alkane','alkene','alkyne','halo','alcohol','alcohol3','ether','aldehyde','ketone','acid','ester','amine1','amine2','amine3','amide1','amide2','amide3']),clsBag=bag(['alcohol','alcohol3','amine1','amine2','amine3','amide1','amide2','amide3']),propsBag=bag(['bp','imf','sol','imf']),reactBag=bag(['ox1ald','ox1acid','ox2','ox3','ester','hydrolysis','hydrogenation','hydration','reduction','amide','neutral','amineHCl']);
 function structHTML(s,style,scale){const m=bd(s);if(style==='condensed')return `<div class="condensed" aria-label="Condensed structure">${condHTML(m)}</div>`;return svgMol(m,{scale:scale||1,alt:'Skeletal structure'})}
 function structStyle(){const v=state.style;return v==='mixed'?(Math.random()<.5?'skeletal':'condensed'):v}
-function optSVG(s){return svgMol(bd(s),{scale:.7,pad:16})}
-const partsHTML=(parts,scale)=>parts.map(p=>p.mol?svgMol(p.mol,{scale:scale||.7,pad:14}):`<span class="ptext">${p.t}</span>`).join('<span class="plus">+</span>');
+function optSVG(s){return svgMol(bd(s),{scale:.9,pad:16})}
+const partsHTML=(parts,scale)=>parts.map(p=>p.mol?svgMol(p.mol,{scale:scale||.85,pad:14}):`<span class="ptext">${p.t}</span>`).join('<span class="plus">+</span>');
 const partKey=parts=>parts.map(p=>p.mol?smiles(p.mol):p.t).join('|');
 const sp=(s)=>({mol:bd(s),spec:s});
 
@@ -380,7 +387,7 @@ function genReact(){const k=reactBag();let react,arrow,correct,wrongs,why,hint,t
  else {const n=rnd(1,4);const salt=M([...Cs(n),nd('N','NH3+','NH₃⁺',{smi:'[NH3+]'})]);react=[mk({f:'amine1',n,p:1}),{t:'HCl'}];arrow='';correct=[{mol:salt},{t:'Cl⁻'}];wrongs=[[NO],[mk({f:'amide1',a:n+1>5?5:n+1}),H2O],[mk({f:'halo',n,p:1,X:'Cl'}),{t:'NH₃'}],[mk({f:'alcohol',n:Math.max(2,n),p:1}),{t:'HCl'}]];why=`An amine is a weak base. It accepts H⁺ from HCl to form an ammonium salt: ${ST[n]}ylammonium chloride.`;hint='Amines act as bases: the N lone pair picks up an H⁺ from the acid to give an ammonium ion with Cl⁻.';title='Amine plus acid'}
  const wr=uniqOpts(correct,wrongs,fill);
  const options=shuf([correct,...wr]).map(p=>({key:partKey(p),html:partsHTML(p),struct:true}));
- return {kind:'react',rx:{react:react.map(p=>p.mol?smiles(p.mol):p.t),correct:correct.map(p=>p.mol?smiles(p.mol):p.t),title},html:`<p class="prompt">${title}: predict the major product.</p><div class="rxn">${partsHTML(react,.9)}<span class="rarrow"><span class="rlab">${arrow}</span>→</span><span class="qmark">?</span></div>`,options,answer:partKey(correct),hint,why,cols:2,struct:true}}
+ return {kind:'react',rx:{react:react.map(p=>p.mol?smiles(p.mol):p.t),correct:correct.map(p=>p.mol?smiles(p.mol):p.t),title},html:`<p class="prompt">${title}: predict the major product.</p><div class="rxn">${partsHTML(react,1)}<span class="rarrow"><span class="rlab">${arrow}</span><span class="rg">→</span></span><span class="qmark">?</span></div>`,options,answer:partKey(correct),hint,why,cols:2,struct:true}}
 const GEN={spot:genSpot,classify:genClassify,name:genName,match:genMatch,react:genReact,props:genProps};
 
 /* ===== UI state, journey, rendering ===== */
