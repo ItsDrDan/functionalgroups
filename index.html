@@ -323,10 +323,18 @@ function layout(m){const n=m.chain.length,pos=[{x:0,y:0}],ang=[];let t=-60;
  if(m.chain[0].ring){lay.ring={cx:-BL*cos(30),cy:-BL*sin(30)}}
  return lay}
 
-function labelSVG(txt,x,y,color,cls){let h='',i=0;const parts=[];for(const ch of txt){if(/[0-9]/.test(ch))parts.push(['sub',ch]);else if(ch==='+'||ch==='−'||ch==='-')parts.push(['sup',ch==='-'?'−':ch]);else parts.push(['n',ch])}
- const first=parts[0][1],off=first==='H'||first==='O'||first==='N'||first==='C'?-6.5:-9;
- let inner='';for(const [k,c] of parts){inner+=k==='n'?c:k==='sub'?`<tspan dy="5" font-size="12">${c}</tspan><tspan dy="-5"></tspan>`:`<tspan dy="-6" font-size="12">${c}</tspan><tspan dy="6"></tspan>`}
- return `<text x="${(x+off).toFixed(1)}" y="${(y+6).toFixed(1)}" fill="${color}" class="atom-label" font-size="18" font-weight="800" font-family="Nunito,Inter,Helvetica,Arial,sans-serif" stroke="#fff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${inner}</text>`}
+const SYMW={C:13,H:13.5,O:14.5,N:13.5,S:11.5,P:11.5,F:10.5,I:6,Cl:17,Br:19.5};
+function lblTspans(t){let inner='';for(const ch of t){inner+=/[0-9]/.test(ch)?`<tspan dy="5" font-size="12">${ch}</tspan><tspan dy="-5"></tspan>`:(ch==='+'||ch==='−'||ch==='-')?`<tspan dy="-7" font-size="13">${ch==='-'?'−':ch}</tspan><tspan dy="7"></tspan>`:ch}return inner}
+/* atom label: the element symbol is centered exactly on the atom (end of its bond); extra H's/charges trail after it (or before it when reversed, e.g. HO–) */
+function atomLabel(txt,el,x,y,color,rev){const at=`fill="${color}" class="atom-label" font-size="18" font-weight="800" font-family="Nunito,Inter,Helvetica,Arial,sans-serif" stroke="#fff" stroke-width="5" stroke-linejoin="round" paint-order="stroke"`;
+ let sym=el&&(rev?txt.endsWith(el)||txt.replace(/[+−-]$/,'').endsWith(el):txt.startsWith(el))?el:(/^(Cl|Br)/.test(txt)?txt.slice(0,2):txt[0]);
+ let pre='',post='';if(rev){const i=txt.lastIndexOf(sym);pre=txt.slice(0,i);post=txt.slice(i+sym.length)}else post=txt.slice(sym.length);
+ const w=SYMW[sym]||13,Y=(y+6.3).toFixed(1);
+ let o=`<text x="${x.toFixed(1)}" y="${Y}" text-anchor="middle" ${at}>${sym}</text>`;
+ if(post)o+=`<text x="${(x+w/2-.5).toFixed(1)}" y="${Y}" ${at}>${lblTspans(post)}</text>`;
+ if(pre)o+=`<text x="${(x-w/2+.5).toFixed(1)}" y="${Y}" text-anchor="end" ${at}>${lblTspans(pre)}</text>`;
+ return o}
+function labelSVG(txt,x,y,color,cls,el){return atomLabel(txt,el,x,y,color,false)}
 const ECOL={O:'#c0392b',N:'#2f5fc4',Cl:'#2e8b57',Br:'#8a5a1c',F:'#2e8b57',I:'#7b3fa0',H:'#334650'};
 /* ===== Branched (expanded) condensed formula: bonds drawn as lines, branches hang above/below ===== */
 const C2W=ch=>/[0-9]/.test(ch)?8.5:/[il]/.test(ch)?6:/[r]/.test(ch)?8:/[a-z]/.test(ch)?10.5:14.5;
@@ -363,7 +371,7 @@ function condensed2D(m,opt){opt=opt||{};const S='#2d3f4b',GAP=22,LV=46;const col
  out.forEach((o,i)=>{svg+=c2Text(o.t,o.x,0,col(o.n.el));
   if(i<out.length-1){const nx=out[i+1];svg+=hline(o.x+o.w+4,nx.x-4,0,m.bonds[i])}
   o.blocks.forEach(b=>{let y=0;b.levels.forEach((t,lv)=>{const y1=lv===0?(b.dir<0?-14:14):y+(b.dir<0?-12:12),y2=y+b.dir*LV-(b.dir<0?-12:12);
-    const yy=y+b.dir*LV;svg+=vline(o.ax,y1,y2,lv===0?b.b:1);const tw=c2Width(t),tx=o.ax-C2W(t[0])/2;svg+=c2Text(t,tx,yy,col(lv===0?b.el:'C'));
+    const yy=y+b.dir*LV;svg+=vline(o.ax,y1,y2,lv===0?b.b:1);const tw=c2Width(t),sl=/^(Cl|Br)/.test(t)?2:1,tx=o.ax-c2Width(t.slice(0,sl))/2;svg+=c2Text(t,tx,yy,col(lv===0?b.el:'C'));
     if(b.side&&b.side.lvl===lv){if(b.side.r){svg+=hline(tx+tw+4,tx+tw+GAP-4,yy,1);svg+=c2Text(b.side.r,tx+tw+GAP,yy,S)}if(b.side.l){const lw=c2Width(b.side.l);svg+=hline(tx-GAP+4,tx-4,yy,1);svg+=c2Text(b.side.l,tx-GAP-lw,yy,S)}}
     y=yy;minY=Math.min(minY,yy-16);maxY=Math.max(maxY,yy+16)})})});
  let minX=0,maxX=x-GAP;out.forEach(o=>o.blocks.forEach(b=>{const half=blockW(b);minX=Math.min(minX,o.ax-half);maxX=Math.max(maxX,o.ax+half)}));
@@ -381,7 +389,7 @@ function svgMol(m,opt){opt=opt||{};const lay=layout(m),pts=[];const S='#2d3f4b';
  lay.tails.forEach(t=>{body+=line(t.x1,t.y1,t.x2,t.y2);pts.push({x:t.x2,y:t.y2})});
  m.chain.forEach((n,i)=>{if(hasLab(n))labs.push([n.draw,lay.pos[i],n.el])});lay.subs.forEach(s=>{if(hasLab(s.s.node))labs.push([s.s.node.draw,s,s.s.node.el])});labs.forEach(([t,p])=>pts.push({x:p.x+t.replace(/[0-9]/g,'').length*11+(/[0-9]/.test(t)?4:0)-8,y:p.y}));
  let ring='';if(lay.ring){const {cx,cy}=lay.ring,R=BL,vs=[0,1,2,3,4,5].map(j=>[cx+R*cos(30+60*j),cy+R*sin(30+60*j)]);ring=`<polygon points="${vs.map(v=>v[0].toFixed(1)+','+v[1].toFixed(1)).join(' ')}" fill="none" stroke="${S}" stroke-width="2.4" stroke-linejoin="round"/><circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(R*.62).toFixed(1)}" fill="none" stroke="${S}" stroke-width="2"/>`;vs.forEach(v=>pts.push({x:v[0],y:v[1]}))}
- const lt=labs.map(([t,p,e])=>labelSVG(t,p.x,p.y,ECOL[e]||S)).join('');
+ const lt=labs.map(([t,p,e])=>labelSVG(t,p.x,p.y,ECOL[e]||S,null,e)).join('');
  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),pad=opt.pad||24;let x0=Math.min(...xs)-pad,x1=Math.max(...xs)+pad+8,y0=Math.min(...ys)-pad,y1=Math.max(...ys)+pad;
  const w=x1-x0,h=y1-y0,sc=opt.scale||1;
  return `<svg class="mol" viewBox="${x0.toFixed(0)} ${y0.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="${esc(opt.alt||'Chemical structure')}" xmlns="http://www.w3.org/2000/svg">${ring}${body}${lt}</svg>`}
@@ -692,8 +700,7 @@ function medPick(){const f=state.medFocus||'all';const list=MEDLIB.filter(m=>f==
 function medLabel(a,mol,i){const [x,y,el,h,chg]=a;if(el==='C'&&!chg)return null;let t=el;if(h===1)t+='H';else if(h>1)t+='H'+h;if(chg>0)t+='+';else if(chg<0)t+='−';
  const nb=mol.bonds.filter(b=>b[0]===i||b[1]===i).map(b=>mol.atoms[b[0]===i?b[1]:b[0]]);const mx=nb.length?nb.reduce((s,p)=>s+p[0],0)/nb.length-x:0;
  const rev=h>0&&nb.length===1&&mx>8;if(rev)t=(h===1?'H':'H'+h)+el+(chg>0?'+':'');return {t,rev}}
-function medTxt(t,x,y,color,rev){let inner='';for(const ch of t){if(/[0-9]/.test(ch))inner+=`<tspan dy="5" font-size="12">${ch}</tspan><tspan dy="-5"></tspan>`;else if(ch==='+'||ch==='−')inner+=`<tspan dy="-7" font-size="13">${ch}</tspan><tspan dy="7"></tspan>`;else inner+=ch}
- const w=/^(Cl|Br)/.test(t)?11:6.5;return `<text x="${(rev?x+6.5:x-w).toFixed(1)}" y="${(y+6).toFixed(1)}" text-anchor="${rev?'end':'start'}" fill="${color}" font-size="18" font-weight="800" font-family="Nunito,Inter,Helvetica,Arial,sans-serif" stroke="#fff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${inner}</text>`}
+function medTxt(t,x,y,color,rev,el){return atomLabel(t,el,x,y,color,rev)}
 const MECOL=Object.assign({},ECOL,{I:'#7b3fa0',S:'#a07800'});
 function drawMed(mol,sel,opt){opt=opt||{};const S='#2d3f4b',A=mol.atoms;let hl='',body='',labs='',badges='';
  const lab=A.map((a,i)=>medLabel(a,mol,i));
@@ -708,7 +715,7 @@ function drawMed(mol,sel,opt){opt=opt||{};const S='#2d3f4b',A=mol.atoms;let hl='
   else if(o===3)[-4.2,0,4.2].forEach(f=>body+=L(x1+px*f,y1+py*f,x2+px*f,y2+py*f));
   else if(side){body+=L(x1,y1,x2,y2);const f=6*side,tr=lab[i]?0:.17*l,tr2=lab[j]?0:.17*l;body+=L(x1+px*f+ux*tr,y1+py*f+uy*tr,x2+px*f-ux*tr2,y2+py*f-uy*tr2)}
   else [-2.9,2.9].forEach(f=>body+=L(x1+px*f,y1+py*f,x2+px*f,y2+py*f))});
- A.forEach((a,i)=>{if(lab[i])labs+=medTxt(lab[i].t,a[0],a[1],MECOL[a[2]]||S,lab[i].rev)});
+ A.forEach((a,i)=>{if(lab[i])labs+=medTxt(lab[i].t,a[0],a[1],MECOL[a[2]]||S,lab[i].rev,a[2])});
  const pts=A.map(a=>({x:a[0],y:a[1]}));const placed=[];const avoid=[];
  A.forEach((a,i)=>{const L=lab[i];if(!L)return;const w=L.t.replace(/[0-9+−]/g,'').length*11.5+(/[0-9]/.test(L.t)?6:0);const sx=L.rev?a[0]+7-w:a[0]-7,ex=sx+w;for(let x=sx;x<=ex;x+=5){pts.push({x,y:a[1]-10},{x,y:a[1]+11});avoid.push([x,a[1]])}});
  sel.forEach(g=>{const gx=g.atoms.reduce((s,i)=>s+A[i][0],0)/g.atoms.length,gy=g.atoms.reduce((s,i)=>s+A[i][1],0)/g.atoms.length;let best=null,bs=-1;
