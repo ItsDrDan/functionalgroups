@@ -296,17 +296,27 @@ body{font-weight:600}
 .toast.badge{padding:8px 16px 8px 10px}.bt-wrap{display:flex;align-items:center;gap:10px}.bt-wrap small{display:block;font-size:12px;color:#a07a1c;font-weight:900;text-transform:uppercase;letter-spacing:.05em}.bt-wrap b{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:18px}
 
 /* ===== drawn reaction arrow (matches Bond Voyage!) ===== */
-.rxn .rarrow{display:inline-flex;flex-direction:column;align-items:stretch;justify-content:center;min-width:130px;margin:0 10px;font-size:16px}
+.rxn .rarrow{display:inline-flex;flex-direction:column;align-items:stretch;justify-content:center;min-width:130px;margin:0 10px;font-size:16px;flex:0 0 auto}
 .rxn .rlab{font-size:15px;font-weight:800;color:#3b5f7a;text-align:center;line-height:1.2;min-height:18px;max-width:200px;padding:0 12px 4px 4px}
 .rxn .rg{display:block;transform:none;padding:6px 0}
 .rxn .arrline{position:relative;display:block;height:3.5px;background:#2d3f4b;border-radius:2px;margin:0 14px 0 0}
 .rxn .arrline::after{content:'';position:absolute;right:-14px;top:50%;transform:translateY(-50%);border-left:17px solid #2d3f4b;border-top:8.5px solid transparent;border-bottom:8.5px solid transparent}
+/* smaller screens: stay on one line, shrink the molecules and the arrow instead of stacking */
 @media(max-width:700px){
- .rxn .rarrow{flex-direction:row;align-items:center;justify-content:center;min-width:0;gap:12px;margin:10px 0}
- .rxn .rlab{order:2;padding:0;text-align:left;max-width:180px}
- .rxn .rg{order:1;padding:0 0 14px}
- .rxn .arrline{width:3.5px;height:56px;margin:0}
- .rxn .arrline::after{right:auto;left:50%;top:auto;bottom:-14px;transform:translateX(-50%);border-left:8.5px solid transparent;border-right:8.5px solid transparent;border-top:17px solid #2d3f4b;border-bottom:0}
+ .rxn{flex-direction:row;flex-wrap:nowrap;gap:4px;padding:8px 6px}
+ .rxn > svg.mol{flex:0 1 auto;min-width:0;max-width:100%;height:auto}
+ .rxn .plus{font-size:20px;padding:0 1px;flex:none}
+ .rxn .ptext{font-size:17px;padding:0 2px;flex:none}
+ .rxn .qmark{font-size:30px;padding:0 4px;flex:none}
+ .rxn .rarrow{flex-direction:column;align-items:stretch;min-width:84px;max-width:110px;margin:0 4px;gap:0}
+ .rxn .rlab{order:0;font-size:12px;text-align:center;white-space:normal;max-width:110px;padding:0 10px 3px 2px;min-height:14px}
+ .rxn .rg{order:0;padding:4px 0}
+ .rxn .arrline{width:auto;height:3px;margin:0 11px 0 0}
+ .rxn .arrline::after{left:auto;right:-11px;top:50%;bottom:auto;transform:translateY(-50%);border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:13px solid #2d3f4b;border-right:0}
+}
+@media(max-width:380px){
+ .rxn .rarrow{min-width:64px;margin:0 2px}
+ .rxn .rlab{font-size:11px}
 }
 </style><script src="https://itsdrdan.github.io/games/track.js" defer></script>
 </head>
