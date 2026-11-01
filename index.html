@@ -37,7 +37,7 @@ details.directions .tip{margin:8px 18px 16px;background:#fff6d6;border-radius:12
 .mode-name{grid-area:n;font-weight:900;font-size:17px;line-height:1.2}
 .mode-btn small{grid-area:s;font-size:12px;color:#4c5a65;font-weight:600;margin-top:2px}
 .mode-btn[data-mode=spot]{--mb:#e7f6e9;--ma:#7caf86}.mode-btn[data-mode=classify]{--mb:#fff0dc;--ma:#d6ab66}.mode-btn[data-mode=name]{--mb:#e6f2ff;--ma:#82afd2}.mode-btn[data-mode=match]{--mb:#f0e8fc;--ma:#ad8cce}.mode-btn[data-mode=react]{--mb:#fde7e7;--ma:#d48a8a}.mode-btn[data-mode=props]{--mb:#e3f7f6;--ma:#6fb7b3}
-.main{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"card ref" "side ref" ". vid";grid-template-rows:auto 1fr auto;gap:14px;align-items:start;margin-top:10px}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"card ref" "side ref" "vid ref";grid-template-rows:auto auto 1fr;gap:14px;align-items:start;margin-top:10px}
 #practice{grid-area:card}#journey{grid-area:side}#refDetails{grid-area:ref}#videoDetails{grid-area:vid}
 .toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .mode-btn[data-mode=med]{--mb:#fdeaf3;--ma:#d68aae;grid-column:1/-1}
@@ -138,6 +138,73 @@ details.directions .tip{margin:8px 18px 16px;background:#fff6d6;border-radius:12
  .rxn{flex-direction:column;gap:2px}.rxn .rarrow{flex-direction:row;gap:10px;margin:8px 0}.rxn .rg{display:inline-block;transform:rotate(90deg)}.rxn .plus{padding:0}
  .struct{padding:4px}.struct svg.mol,.rxn svg.mol,.opt-body svg.mol{width:auto;max-width:100%;height:auto}
 }
+/* ===== v8 polish ===== */
+body{background-color:#f6faf7;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='96' viewBox='0 0 84 96'%3E%3Cpath d='M42 8l26 15v30L42 68 16 53V23z' fill='none' stroke='%2390b8a6' stroke-opacity='.11' stroke-width='2'/%3E%3C/svg%3E"),linear-gradient(120deg,#f1faf4 0%,#fffaf1 45%,#fdf1f1 100%);background-attachment:fixed}
+.hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#ffffff 0%,#f4faff 55%,#fff3f1 100%);border:1px solid #e8e2d6}
+.hero::before{content:"";position:absolute;right:170px;top:-18px;width:260px;height:180px;opacity:.13;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 180'%3E%3Cg fill='none' stroke='%233f94c9' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 120l40-24 40 24 40-24 40 24 40-24'/%3E%3Cpath d='M90 120v44M170 120v44M208 96l0-48'/%3E%3Cpath d='M130 96v-40m8 0v40'/%3E%3C/g%3E%3C/svg%3E") no-repeat center/contain}
+.hero h1 .a{background:linear-gradient(90deg,#e0675b,#ef9a6a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 .b{background:linear-gradient(90deg,#3f94c9,#5bb7b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.badge{background:#fff;border:1.5px solid #ece4d4;box-shadow:0 1px 0 #0000000a}
+.mode-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.mode-btn[data-mode=med]{grid-column:auto}
+.mode-btn[data-mode=blitz]{--mb:#fff6d6;--ma:#e2b33b}
+.mode-btn{box-shadow:0 3px 10px #26343c0d;transition:transform .15s,box-shadow .15s}
+.mode-btn:hover{box-shadow:0 8px 18px #26343c1a}
+.mode-btn .mode-icon{background:#fff;box-shadow:inset 0 0 0 2px var(--ma);color:#2f4450}
+.mode-btn.active{background:linear-gradient(145deg,#fff,var(--mb));box-shadow:0 0 0 3px var(--ma),0 8px 18px #26343c1a;outline:none}
+.mode-btn.active .mode-icon{background:var(--ma);color:#fff}
+#practice{--acc:#7caf86;border-top:6px solid var(--acc);padding-top:16px}
+#practice[data-mode=classify]{--acc:#d6ab66}#practice[data-mode=name]{--acc:#82afd2}#practice[data-mode=match]{--acc:#ad8cce}#practice[data-mode=react]{--acc:#d48a8a}#practice[data-mode=props]{--acc:#6fb7b3}#practice[data-mode=med]{--acc:#d68aae}#practice[data-mode=blitz]{--acc:#e2b33b}
+.mode-title{letter-spacing:-.01em}
+.pill{background:#fff;border:1.5px solid #ece4d4;box-shadow:0 1px 0 #0000000a}
+#nextBtn{border-radius:999px;background:linear-gradient(180deg,#30464f,#22343c);box-shadow:0 3px 0 #13232a}
+#nextBtn:active{transform:translateY(2px);box-shadow:0 1px 0 #13232a}
+.prompt{color:#1f2d36}
+.struct{border:2px solid #ebe5d8;background-color:#fff;background-image:radial-gradient(#e3eaef 1.1px,transparent 1.2px);background-size:18px 18px;box-shadow:inset 0 1px 6px #26343c0d;min-height:150px}
+.condensed{color:#24343e}
+.option{box-shadow:0 2px 0 #26343c0d;transition:transform .12s,border-color .12s,background .12s}
+.option.selected .opt-letter{background:var(--blue);color:#fff}
+.option.right .opt-letter{background:#4fa36a;color:#fff}.option.wrong .opt-letter{background:#d9776f;color:#fff}
+.option.right{box-shadow:0 0 0 3px #4fa36a33}
+.action.primary{background:linear-gradient(180deg,#58ade2,#3d90ca);box-shadow:0 4px 0 #2d73a3}
+.action.primary:hover{background:linear-gradient(180deg,#4ea3d9,#357fb3)}
+.action.primary:active{transform:translateY(2px);box-shadow:0 2px 0 #2d73a3}
+.action.secondary{background:#f4efe4;box-shadow:0 3px 0 #e2d9c6}
+.action.secondary:active{transform:translateY(2px);box-shadow:0 1px 0 #e2d9c6}
+.feedback.good{border-left:6px solid #4fa36a}.feedback.bad{border-left:6px solid #d9776f}
+.hintbox{border-left:6px solid #e8c15a}
+.collapsible,.journey{overflow:hidden}
+.collapsible>summary,.journey>summary{border-bottom:1px solid transparent}
+.collapsible[open]>summary,.journey[open]>summary{border-bottom-color:#eee6d8;margin-bottom:10px}
+#refDetails{background:linear-gradient(180deg,#fbf8ff,#fffefa 120px)}
+.ref-table{border-collapse:separate;border-spacing:0;border:1px solid #e6e0d2;border-radius:12px;overflow:hidden}
+.ref-table th,.ref-table td{border:0;border-bottom:1px solid #eee8db}
+.ref-table thead th{background:#efe9fb;position:sticky;top:0}
+.ref-table tbody tr:nth-child(even){background:#fbf9f4}
+.ref-table tbody tr:last-child td{border-bottom:0}
+.footer-note b{color:#2f4450}
+/* level selector */
+.level-row{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.lr-label{font-weight:800;font-size:15px}
+.seg{display:inline-flex;background:#f1ece2;border-radius:999px;padding:4px;gap:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14.5px;cursor:pointer;min-height:38px;color:#4b5a64}
+.seg button.on{background:#fff;color:#22313b;box-shadow:0 2px 6px #26343c22}
+.chal{display:inline-block;background:linear-gradient(90deg,#ffe08a,#ffc46b);color:#5b3b00;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:900;vertical-align:middle;margin-right:6px}
+.cond2d{max-width:100%;height:auto}
+/* blitz */
+.blitz-start{text-align:center;padding:18px 10px 8px}.blitz-start h3{margin:4px 0;font-size:26px}.blitz-start p{color:var(--muted);font-size:16px;margin:4px 0 10px}
+.bz-bolt{font-size:54px;line-height:1;animation:bzpulse 1.6s ease-in-out infinite}@keyframes bzpulse{50%{transform:scale(1.12)}}@media(prefers-reduced-motion:reduce){.bz-bolt{animation:none}}
+.bz-rules{list-style:none;padding:0;margin:8px auto 12px;max-width:420px;text-align:left;font-weight:700;font-size:15px}.bz-rules li{background:#fff;border:1px solid #eee6d8;border-radius:12px;padding:8px 12px;margin:6px 0}
+.bz-best{font-weight:800;margin:6px 0 12px}.bz-go{min-width:220px;font-size:20px}
+.mode-xp{grid-template-columns:repeat(4,1fr)}#practice[data-mode=blitz] .score{display:none}
+.bz-bar{position:sticky;top:0;z-index:4;background:var(--card);padding:6px 0 8px}
+.bz-time{height:14px;border-radius:99px;background:#efe8da;overflow:hidden}.bz-fill{height:100%;width:100%;background:linear-gradient(90deg,#8fd8c8,#f7c968);transition:width .1s linear}.bz-fill.low{background:linear-gradient(90deg,#f7a07a,#e86a6a)}
+.bz-stats{display:flex;gap:8px;justify-content:center;margin-top:8px}.bz-stats b{font-size:17px}
+.bz-q .prompt{font-size:19px}
+.bz-result{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px auto;max-width:520px}.bz-result div{background:#fff;border:1px solid #eee6d8;border-radius:14px;padding:10px 6px;font-size:13px;font-weight:700;color:var(--muted)}.bz-result b{display:block;font-size:24px;color:var(--ink)}
+.bz-miss{text-align:left;max-width:520px;margin:8px auto 14px;background:#fff8e6;border:1px solid #f0dc94;border-radius:14px;padding:10px 14px}.bz-miss ul{margin:6px 0 0;padding-left:18px}.bz-miss svg{max-height:60px;width:auto;vertical-align:middle}
+@media(max-width:1000px){.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.bz-result{grid-template-columns:repeat(2,1fr)}.seg button{padding:7px 10px;font-size:13.5px}.hero::before{display:none}}
+
 </style><script src="https://itsdrdan.github.io/games/track.js" defer></script>
 </head>
 <body>
@@ -147,11 +214,12 @@ details.directions .tip{margin:8px 18px 16px;background:#fff6d6;border-radius:12
 <h1><span class="a">Organic</span> <span class="b">Origins</span></h1>
 <p class="subtitle">Spot, name and draw organic compounds, then predict how they react.</p></div><div class="hero-emoji mascot" id="mascot" role="img" aria-label="Aqua, the water-molecule mascot"></div></section>
 <details class="directions" id="howTo"><summary id="howToTitle">📘 How to use this game <span class="sum-hint">Tap to open</span></summary>
-<ol><li><strong>Pick a mode.</strong> Spot the Group, 1°/2°/3°, Name It, Draw It, Predict the Product, Properties or Med Molecules.</li>
+<ol><li><strong>Pick a mode.</strong> Spot the Group, 1°/2°/3°, Name It, Draw It, Predict the Product, Properties, Med Molecules or ⚡ Blitz.</li>
 <li><strong>Choose an answer</strong> and press Check Answer. Wrong choices are marked so you can try again.</li>
 <li><strong>Need help?</strong> Hint gives a clue. Show Answer reveals the solution but earns no point.</li>
 <li><strong>Med Molecules:</strong> find groups (labeled A, B, C) in real drugs and body molecules, then read the fun fact.</li>
-<li><strong>Skeletal or condensed.</strong> Use the Structure style menu to practice both ways of drawing.</li>
+<li><strong>🏆 Challenge:</strong> in Name It or Draw It, set Level to Challenge for branched names.</li>
+<li><strong>Structure style:</strong> skeletal, one-line condensed, or condensed with branches drawn.</li>
 <li><strong>Earn XP and badges</strong> for independent answers and streaks. Progress is saved in this browser only.</li></ol>
 <p class="tip"><strong>Tip:</strong> In skeletal drawings every corner and line end is a carbon with enough hydrogens to make four bonds.</p></details>
 <nav class="mode-grid" id="modeGrid" aria-label="Choose a study mode"></nav>
@@ -160,9 +228,10 @@ details.directions .tip{margin:8px 18px 16px;background:#fff6d6;border-radius:12
 <div class="toprow"><h2 class="mode-title" id="modeTitle">Spot the Group</h2><div class="score"><span class="pill">Correct: <span id="correct">0</span></span><span class="pill">Streak: <span id="streak">0</span> 🔥</span><span class="pill">Assisted: <span id="assisted">0</span></span><button class="action next" id="nextBtn">New Question ↻</button></div></div>
 <p class="footer-note progress-note" id="progressLabel"></p>
 <div class="focus-row hidden" id="medRow"><label for="medSel">Focus</label><select id="medSel"><option value="all">All fields</option><option value="nursing">🩺 Nursing &amp; pharmacology</option><option value="dental">🦷 Dental hygiene &amp; dentistry</option><option value="resp">🫁 Respiratory &amp; anesthesia</option><option value="imaging">🩻 Radiology &amp; imaging</option><option value="body">🫀 Anatomy &amp; physiology</option><option value="benzene">⬡ Benzene family (phenol, toluene, anisole…)</option></select></div>
-<div class="style-row" id="styleRow"><label for="styleSel">Structure style</label><select id="styleSel"><option value="mixed">Mixed</option><option value="skeletal">Skeletal</option><option value="condensed">Condensed</option></select></div>
+<div class="level-row hidden" id="levelRow"><span class="lr-label">Level</span><div class="seg" role="group" aria-label="Difficulty"><button type="button" data-lv="basic">Basic</button><button type="button" data-lv="mixed">Mixed</button><button type="button" data-lv="challenge">🏆 Challenge</button></div></div>
+<div class="style-row" id="styleRow"><label for="styleSel">Structure style</label><select id="styleSel"><option value="mixed">Mixed</option><option value="skeletal">Skeletal</option><option value="condensed">Condensed (one line)</option><option value="cond2d">Condensed (branches drawn)</option></select></div>
 <div id="questionArea"></div>
-<div class="btn-row"><button class="action primary" id="checkBtn">Check Answer</button><button class="action secondary" id="hintBtn">Hint</button><button class="action secondary" id="showBtn">Show Answer</button></div>
+<div class="btn-row" id="btnRow"><button class="action primary" id="checkBtn">Check Answer</button><button class="action secondary" id="hintBtn">Hint</button><button class="action secondary" id="showBtn">Show Answer</button></div>
 <div class="hintbox" id="hintBox"></div><div class="feedback" id="feedback" role="status" aria-live="polite"></div>
 </section>
 <details class="card collapsible" id="refDetails"><summary>🧠 Reference &amp; rules</summary><div class="body" id="refBody"></div></details>
@@ -197,7 +266,7 @@ function flipMol(m){return {chain:m.chain.slice().reverse(),bonds:m.bonds.slice(
 function layout(m){const n=m.chain.length,pos=[{x:0,y:0}],ang=[];let t=-60;
  if(n>1){ang[0]=30;for(let k=1;k<n-1;k++){const lin=m.bonds[k-1]===3||m.bonds[k]===3;if(lin)ang[k]=ang[k-1];else{ang[k]=ang[k-1]+t;t=-t}}
   for(let i=0;i<n-1;i++)pos.push({x:pos[i].x+BL*cos(ang[i]),y:pos[i].y+BL*sin(ang[i])})}
- const lay={pos,ang,t,subs:[],ring:null};
+ const lay={pos,ang,t,subs:[],tails:[],ring:null};
  for(let k=0;k<n;k++){const node=m.chain[k],ss=node.subs||[];if(!ss.length)continue;
   let out;const prev=k>0?pos[k-1]:null,next=k<n-1?pos[k+1]:null;
   const u=(a,b)=>{const dx=a.x-b.x,dy=a.y-b.y,l=Math.hypot(dx,dy);return {x:dx/l,y:dy/l}};
@@ -205,8 +274,10 @@ function layout(m){const n=m.chain.length,pos=[{x:0,y:0}],ang=[];let t=-60;
   else if(next){const a0=Math.atan2(pos[k].y-next.y,pos[k].x-next.x)/deg;const c1=a0+60,c2=a0-60;out=sin(c1)<sin(c2)?c1:c2}
   else if(prev){const a0=Math.atan2(pos[k].y-prev.y,pos[k].x-prev.x)/deg;const c1=a0+60,c2=a0-60;out=sin(c1)<sin(c2)?c1:c2}
   else out=-90;
-  const dirs=ss.length===1?[out]:[out-58,out+58];
-  ss.forEach((s,j)=>lay.subs.push({k,s,x:pos[k].x+BL*cos(dirs[j]),y:pos[k].y+BL*sin(dirs[j]),dir:dirs[j]}))}
+  const dirs=ss.length===1?[out]:[out-40,out+40];
+  ss.forEach((s,j)=>{const sx=pos[k].x+BL*cos(dirs[j]),sy=pos[k].y+BL*sin(dirs[j]);lay.subs.push({k,s,x:sx,y:sy,dir:dirs[j]});
+   const tl=s.node.tail;if(tl){const sg=ss.length===1?(sin(dirs[j])<0?1:-1):(dirs[j]<out?-1:1);const ang=tl==='et'?[dirs[j]+60*sg]:tl==='ipr'?[dirs[j]+60,dirs[j]-60]:[dirs[j],dirs[j]+90,dirs[j]-90];
+    ang.forEach(a=>lay.tails.push({x1:sx,y1:sy,x2:sx+BL*cos(a),y2:sy+BL*sin(a)}))}})}
  if(m.chain[0].ring){lay.ring={cx:-BL*cos(30),cy:-BL*sin(30)}}
  return lay}
 
@@ -214,7 +285,49 @@ function labelSVG(txt,x,y,color,cls){let h='',i=0;const parts=[];for(const ch of
  const first=parts[0][1],off=first==='H'||first==='O'||first==='N'||first==='C'?-6.5:-9;
  let inner='';for(const [k,c] of parts){inner+=k==='n'?c:k==='sub'?`<tspan dy="5" font-size="12">${c}</tspan><tspan dy="-5"></tspan>`:`<tspan dy="-6" font-size="12">${c}</tspan><tspan dy="6"></tspan>`}
  return `<text x="${(x+off).toFixed(1)}" y="${(y+6).toFixed(1)}" fill="${color}" class="atom-label" font-size="18" font-weight="800" font-family="Inter,Helvetica,Arial,sans-serif" stroke="#fff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${inner}</text>`}
-const ECOL={O:'#c0392b',N:'#2f5fc4',Cl:'#2e8b57',Br:'#8a5a1c',F:'#2e8b57',H:'#334650'};
+const ECOL={O:'#c0392b',N:'#2f5fc4',Cl:'#2e8b57',Br:'#8a5a1c',F:'#2e8b57',I:'#7b3fa0',H:'#334650'};
+/* ===== Branched (expanded) condensed formula: bonds drawn as lines, branches hang above/below ===== */
+const C2W=ch=>/[0-9]/.test(ch)?8.5:/[il]/.test(ch)?6:/[r]/.test(ch)?8:/[a-z]/.test(ch)?10.5:14.5;
+const c2Width=t=>[...t].reduce((a,ch)=>a+C2W(ch),0);
+function c2Text(t,x,y,color){let inner='';for(const ch of t){inner+=/[0-9]/.test(ch)?`<tspan dy="5" font-size="13">${ch}</tspan><tspan dy="-5"></tspan>`:ch}
+ return `<text x="${x.toFixed(1)}" y="${(y+7).toFixed(1)}" fill="${color}" font-size="20" font-weight="700" font-family="Georgia,'Times New Roman',serif">${inner}</text>`}
+function c2NodeText(m,n,i){const ord=()=>{let v=0;if(i>0)v+=m.bonds[i-1];if(i<m.chain.length-1)v+=m.bonds[i];(n.subs||[]).forEach(sb=>v+=sb.b);return v};
+ if(n.ring)return m.chain.length===1?'C6H6':'C6H5';
+ if(n.el==='C'&&!n.cond){const h=4-ord();return h<=0?'C':h===1?'CH':'CH'+h}
+ if(n.el==='N'&&(n.draw==='NH'||n.draw==='N')){const h=3-ord();return h<=0?'N':h===1?'NH':'NH'+h}
+ if(i===0&&n.draw==='OH')return 'HO';if(i===0&&n.draw==='NH2')return 'H2N';
+ return n.cond||n.el}
+/* a substituent as a vertical stack of text levels; side groups hang off a level horizontally */
+function c2SubBlock(sb){const nn=sb.node;
+ if(nn.tail==='et')return {levels:['CH2','CH3'],side:null,b:sb.b,el:'C'};
+ if(nn.tail==='ipr')return {levels:['CH','CH3'],side:{lvl:0,r:'CH3'},b:sb.b,el:'C'};
+ if(nn.tail==='tbu')return {levels:['C','CH3'],side:{lvl:0,r:'CH3',l:'H3C'},b:sb.b,el:'C'};
+ const t=nn.el==='C'?(nn.cond||'CH3'):(nn.cond||nn.draw||nn.el);return {levels:[t],side:null,b:sb.b,el:nn.el}}
+function condensed2D(m,opt){opt=opt||{};const S='#2d3f4b',GAP=22,LV=46;const col=el=>ECOL[el]||S;
+ const nodes=m.chain.map((n,i)=>({n,t:c2NodeText(m,n,i)}));
+ // decide up/down for subs: =O up; two subs: one up one down; else alternate starting down
+ let flipUp=false;nodes.forEach(o=>{const ss=(o.n.subs||[]).map(c2SubBlock);o.blocks=ss;
+  if(ss.length===1){const b=ss[0];b.dir=b.b===2?-1:(flipUp?-1:1);if(b.b!==2)flipUp=!flipUp}
+  else if(ss.length===2){const dbl=ss.findIndex(b=>b.b===2);if(dbl>=0){ss[dbl].dir=-1;ss[1-dbl].dir=1}else{ss[0].dir=-1;ss[1].dir=1}}
+  else ss.forEach((b,j)=>b.dir=j%2?1:-1)});
+ // widths: slot must fit the token and any hanging block
+ let x=0;const out=[];let svg='',minY=-16,maxY=16;
+ const blockW=b=>Math.max(...b.levels.map(c2Width))+(b.side?((b.side.r?c2Width(b.side.r)+GAP:0)+(b.side.l?c2Width(b.side.l)+GAP:0)):0);
+ nodes.forEach((o,i)=>{const w=c2Width(o.t);const anchorOff=o.t.startsWith('H')&&o.t.length>1&&i===0?w-C2W(o.t[o.t.length-1])/2:C2W(o.t[0])/2;
+  let need=w;o.blocks.forEach(b=>{need=Math.max(need,anchorOff+blockW(b)/2+6)});
+  o.x=x;o.w=w;o.ax=x+anchorOff;out.push(o);x+=need+GAP});
+ const hline=(x1,x2,y,ord)=>{const offs=ord===1?[0]:ord===2?[-3,3]:[-4.5,0,4.5];return offs.map(d=>`<line x1="${x1.toFixed(1)}" y1="${(y+d).toFixed(1)}" x2="${x2.toFixed(1)}" y2="${(y+d).toFixed(1)}" stroke="${S}" stroke-width="2"/>`).join('')};
+ const vline=(xx,y1,y2,ord)=>{const offs=ord===1?[0]:ord===2?[-3,3]:[-4.5,0,4.5];return offs.map(d=>`<line x1="${(xx+d).toFixed(1)}" y1="${y1.toFixed(1)}" x2="${(xx+d).toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${S}" stroke-width="2"/>`).join('')};
+ out.forEach((o,i)=>{svg+=c2Text(o.t,o.x,0,col(o.n.el));
+  if(i<out.length-1){const nx=out[i+1];svg+=hline(o.x+o.w+4,nx.x-4,0,m.bonds[i])}
+  o.blocks.forEach(b=>{let y=0;b.levels.forEach((t,lv)=>{const y1=lv===0?(b.dir<0?-14:14):y+(b.dir<0?-12:12),y2=y+b.dir*LV-(b.dir<0?-12:12);
+    const yy=y+b.dir*LV;svg+=vline(o.ax,y1,y2,lv===0?b.b:1);const tw=c2Width(t),tx=o.ax-C2W(t[0])/2;svg+=c2Text(t,tx,yy,col(lv===0?b.el:'C'));
+    if(b.side&&b.side.lvl===lv){if(b.side.r){svg+=hline(tx+tw+4,tx+tw+GAP-4,yy,1);svg+=c2Text(b.side.r,tx+tw+GAP,yy,S)}if(b.side.l){const lw=c2Width(b.side.l);svg+=hline(tx-GAP+4,tx-4,yy,1);svg+=c2Text(b.side.l,tx-GAP-lw,yy,S)}}
+    y=yy;minY=Math.min(minY,yy-16);maxY=Math.max(maxY,yy+16)})})});
+ let minX=0,maxX=x-GAP;out.forEach(o=>o.blocks.forEach(b=>{const half=blockW(b);minX=Math.min(minX,o.ax-half);maxX=Math.max(maxX,o.ax+half)}));
+ const pad=12,vx=minX-pad,vy=minY-pad,w=maxX-minX+2*pad,h=maxY-minY+2*pad,sc=opt.scale||1;
+ return `<svg class="mol cond2d" viewBox="${vx.toFixed(0)} ${vy.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="Condensed structure with branches drawn" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`}
+
 function svgMol(m,opt){opt=opt||{};const lay=layout(m),pts=[];const S='#2d3f4b';let body='';
  const line=(x1,y1,x2,y2,w)=>`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${S}" stroke-width="${w||2.4}" stroke-linecap="round"/>`;
  const bond=(a,b,order,aLab,bLab)=>{let [x1,y1,x2,y2]=[a.x,a.y,b.x,b.y];const dx=x2-x1,dy=y2-y1,l=Math.hypot(dx,dy),ux=dx/l,uy=dy/l,px=-uy,py=ux;if(aLab){x1+=ux*9;y1+=uy*9}if(bLab){x2-=ux*9;y2-=uy*9}
@@ -223,7 +336,8 @@ function svgMol(m,opt){opt=opt||{};const lay=layout(m),pts=[];const S='#2d3f4b';
  lay.pos.forEach(p=>pts.push(p));lay.subs.forEach(s=>pts.push(s));
  for(let i=0;i<m.chain.length-1;i++)body+=bond(lay.pos[i],lay.pos[i+1],m.bonds[i],hasLab(m.chain[i]),hasLab(m.chain[i+1]));
  lay.subs.forEach(s=>{body+=bond(lay.pos[s.k],s,s.s.b,hasLab(m.chain[s.k]),hasLab(s.s.node))});
- m.chain.forEach((n,i)=>{if(hasLab(n))labs.push([n.draw,lay.pos[i],n.el])});lay.subs.forEach(s=>{if(hasLab(s.s.node))labs.push([s.s.node.draw,s,s.s.node.el])});
+ lay.tails.forEach(t=>{body+=line(t.x1,t.y1,t.x2,t.y2);pts.push({x:t.x2,y:t.y2})});
+ m.chain.forEach((n,i)=>{if(hasLab(n))labs.push([n.draw,lay.pos[i],n.el])});lay.subs.forEach(s=>{if(hasLab(s.s.node))labs.push([s.s.node.draw,s,s.s.node.el])});labs.forEach(([t,p])=>pts.push({x:p.x+t.replace(/[0-9]/g,'').length*11+(/[0-9]/.test(t)?4:0)-8,y:p.y}));
  let ring='';if(lay.ring){const {cx,cy}=lay.ring,R=BL,vs=[0,1,2,3,4,5].map(j=>[cx+R*cos(30+60*j),cy+R*sin(30+60*j)]);ring=`<polygon points="${vs.map(v=>v[0].toFixed(1)+','+v[1].toFixed(1)).join(' ')}" fill="none" stroke="${S}" stroke-width="2.4" stroke-linejoin="round"/><circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(R*.62).toFixed(1)}" fill="none" stroke="${S}" stroke-width="2"/>`;vs.forEach(v=>pts.push({x:v[0],y:v[1]}))}
  const lt=labs.map(([t,p,e])=>labelSVG(t,p.x,p.y,ECOL[e]||S)).join('');
  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),pad=opt.pad||24;let x0=Math.min(...xs)-pad,x1=Math.max(...xs)+pad+8,y0=Math.min(...ys)-pad,y1=Math.max(...ys)+pad;
@@ -231,7 +345,7 @@ function svgMol(m,opt){opt=opt||{};const lay=layout(m),pts=[];const S='#2d3f4b';
  return `<svg class="mol" viewBox="${x0.toFixed(0)} ${y0.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="${esc(opt.alt||'Chemical structure')}" xmlns="http://www.w3.org/2000/svg">${ring}${body}${lt}</svg>`}
 
 const SYM=e=>e;
-function smiles(m){let s='';const sub=(sb)=>{const nn=sb.node;return '('+(sb.b===2?'=':sb.b===3?'#':'')+SYM(nn.el)+')'};
+function smiles(m){let s='';const sub=(sb)=>{const nn=sb.node;return '('+(sb.b===2?'=':sb.b===3?'#':'')+(nn.smi||SYM(nn.el))+')'};
  for(let i=0;i<m.chain.length;i++){const n=m.chain[i];if(n.noSmiles)continue;if(i>0)s+=m.bonds[i-1]===2?'=':m.bonds[i-1]===3?'#':'';
   if(n.ring)s+='c1ccccc1';else s+=n.smi||SYM(n.el);(n.subs||[]).forEach(sb=>{s+=sub(sb)})}return s}
 function condensed(m){let s='';const ord=(n,i)=>{let v=0;if(i>0)v+=m.bonds[i-1];if(i<m.chain.length-1)v+=m.bonds[i];(n.subs||[]).forEach(sb=>v+=sb.b);return v};
@@ -240,8 +354,9 @@ function condensed(m){let s='';const ord=(n,i)=>{let v=0;if(i>0)v+=m.bonds[i-1];
   if(n.el==='C'&&!n.cond){const h=4-ord(n,i);s+=h<=0?'C':h===1?'CH':'CH'+h}
   else if(n.el==='N'&&n.draw==='NH'){const h=3-ord(n,i);s+=h<=0?'N':h===1?'NH':'NH'+h}
   else if(n.el==='N'&&n.draw==='N'){s+='N'}
+  else if(i===0&&n.draw==='OH')s+='HO';else if(i===0&&n.draw==='NH2')s+='H2N';
   else s+=n.cond||n.el;
-  (n.subs||[]).forEach(sb=>{s+='('+(sb.b===2?'=':'')+(sb.node.cond||sb.node.el)+')'})});
+  const gs=[];(n.subs||[]).forEach(sb=>{const t=(sb.b===2?'=':'')+(sb.node.cond||sb.node.el);const g=gs.find(x=>x.t===t);if(g)g.c++;else gs.push({t,c:1})});gs.forEach(g=>{s+='('+g.t+')'+(g.c>1?g.c:'')})});
  return s}
 const subsc=t=>t.replace(/([A-Za-z\)])(\d+)/g,'$1<sub>$2</sub>');
 function condHTML(m){return subsc(condensed(m)).replace(/≡/g,'≡')}
@@ -341,20 +456,134 @@ const CONF={alkane:['alkene','alkyne','aromatic','halide'],alkene:['alkane','alk
 const GRP_R={alkane:['alkane'],alkene:['alkene'],alkyne:['alkyne'],halide:['halo'],aromatic:['arene'],alcohol:['alcohol','alcohol','alcohol3'],ether:['ether'],aldehyde:['aldehyde'],ketone:['ketone'],acid:['acid'],ester:['ester'],amine:['amine1','amine2','amine3'],amide:['amide1','amide2','amide3']};
 function bag(list){let b=[],last=null;return ()=>{if(!b.length){b=shuf(list);if(b[b.length-1]===last&&b.length>1)b.unshift(b.pop())}last=b.pop();return last}}
 const spotBag=bag(Object.keys(GN)),nameBag=bag(['alkane','alkene','alkyne','halo','alcohol','alcohol3','ether','aldehyde','ketone','acid','ester','amine1','amine2','amine3','amide1','amide2','amide3']),clsBag=bag(['alcohol','alcohol3','amine1','amine2','amine3','amide1','amide2','amide3']),propsBag=bag(['bp','imf','sol','imf']),reactBag=bag(['ox1ald','ox1acid','ox2','ox3','ester','hydrolysis','hydrogenation','hydration','reduction','amide','neutral','amineHCl']);
-function structHTML(s,style,scale){const m=bd(s);if(style==='condensed')return `<div class="condensed" aria-label="Condensed structure">${condHTML(m)}</div>`;return svgMol(m,{scale:scale||1,alt:'Skeletal structure'})}
-function structStyle(){const v=state.style;return v==='mixed'?(Math.random()<.5?'skeletal':'condensed'):v}
+function structHTML(s,style,scale){const m=bd(s);if(style==='condensed')return `<div class="condensed" aria-label="Condensed structure">${condHTML(m)}</div>`;if(style==='cond2d')return condensed2D(m,{scale:scale||1});return svgMol(m,{scale:scale||1,alt:'Skeletal structure'})}
+function structStyle(){const v=state.style;if(v!=='mixed')return v;const r=Math.random();return r<.42?'skeletal':r<.7?'condensed':'cond2d'}
 function optSVG(s){return svgMol(bd(s),{scale:.9,pad:16})}
 const partsHTML=(parts,scale)=>parts.map(p=>p.mol?svgMol(p.mol,{scale:scale||.85,pad:14}):`<span class="ptext">${p.t}</span>`).join('<span class="plus">+</span>');
 const partKey=parts=>parts.map(p=>p.mol?smiles(p.mol):p.t).join('|');
 const sp=(s)=>({mol:bd(s),spec:s});
 
+/* ===== Branched compounds: build, IUPAC name, challenge problems ===== */
+const STX=['','meth','eth','prop','but','pent','hex','hept','oct'];
+const ALKSUB={me:{name:'methyl',L:1,cond:'CH3',smi:'C',tail:null},et:{name:'ethyl',L:2,cond:'CH2CH3',smi:'CC',tail:'et'},ipr:{name:'isopropyl',L:2,cond:'CH(CH3)2',smi:'C(C)C',tail:'ipr'},tbu:{name:'tert-butyl',L:2,cond:'C(CH3)3',smi:'C(C)(C)C',tail:'tbu'}};
+const HALSUB={Cl:'chloro',Br:'bromo',F:'fluoro',I:'iodo'};
+const subName=t=>ALKSUB[t]?ALKSUB[t].name:HALSUB[t];
+const akey=nmx=>nmx.replace(/^tert-/,'');
+const MULT=['','','di','tri','tetra'];
+const TERMPG={aldehyde:1,acid:1,ester:1,amide:1};
+const BRGRP={alkane:'alkane',alkene:'alkene',alkyne:'alkyne',halide:'halide',alcohol:'alcohol',aldehyde:'aldehyde',ketone:'ketone',acid:'acid',ester:'ester',amine:'amine',amide:'amide'};
+function subNode(t){if(ALKSUB[t]){const a=ALKSUB[t];return {b:1,node:{el:'C',cond:a.cond,smi:a.smi,tail:a.tail,subs:[]}}}return sX(t)}
+/* spec: {f:'br',k,n,pg (index of principal carbon or null),mb:{i,o}|null,subs:[{i,t}],b (ester alkyl),flip} */
+function brBuild(s){const n=s.n,C=Cs(n),pre=[],post=[];const k=s.k;
+ if(k==='alcohol'||k==='amine'){const tn=k==='alcohol'?tOH:tNH2,sn=k==='alcohol'?sOH:sNH2;if(s.pg===n-1)post.push(tn());else if(s.pg===0)pre.push(tn());else C[s.pg].subs.push(sn())}
+ if(k==='ketone')C[s.pg].subs.push(sO());
+ if(TERMPG[k]){C[n-1].subs.push(sO());if(k==='aldehyde')post.push(tH());if(k==='acid')post.push(tOH());if(k==='amide')post.push(tNH2());if(k==='ester'){post.push(nO());Cs(s.b).forEach(c=>post.push(c))}}
+ s.subs.slice().sort((a,b)=>(ALKSUB[a.t]?0:1)-(ALKSUB[b.t]?0:1)).forEach(x=>{if(HALSUB[x.t]&&(x.i===0||x.i===n-1)&&!(x.i===s.pg&&!TERMPG[k])&&C[x.i].subs.length===0&&!(x.i===0?pre.length:post.length)){(x.i===0?pre:post).push(tX(x.t))}else C[x.i].subs.push(subNode(x.t))});
+ const chain=[...pre,...C,...post];const bonds=Array(chain.length-1).fill(1);if(s.mb)bonds[pre.length+s.mb.i]=s.mb.o;
+ return {chain,bonds}}
+/* valence/chain-choice validity */
+function brValid(s){const n=s.n,k=s.k;if(n<3||n>8)return false;
+ const used=Array(n).fill(0);for(let i=0;i<n;i++)used[i]=(i>0?1:0)+(i<n-1?1:0);
+ if(s.mb){if(s.mb.i<0||s.mb.i>n-2)return false;used[s.mb.i]+=s.mb.o-1;used[s.mb.i+1]+=s.mb.o-1}
+ if(s.pg!=null){if(s.pg<0||s.pg>n-1)return false;if(k==='ketone'){if(s.pg===0||s.pg===n-1)return false;used[s.pg]+=2}else if(TERMPG[k]){if(s.pg!==n-1)return false;used[s.pg]=4}else used[s.pg]+=1}
+ const seen=new Set();
+ for(const x of s.subs){if(x.i<0||x.i>n-1)return false;const kk=x.i+':'+x.t;used[x.i]+=1;
+  if(ALKSUB[x.t]){if(x.i===0||x.i===n-1)return false;const L=ALKSUB[x.t].L;
+   for(const side of [0,1]){const seg=side?n-1-x.i:x.i;const segIdx=[...Array(seg)].map((_,j)=>side?x.i+1+j:j);
+    if(seg>L)continue;if(seg<L)return false;
+    const hasPG=s.pg!=null&&segIdx.includes(s.pg);
+    const mbTouch=!!s.mb&&(segIdx.includes(s.mb.i)||segIdx.includes(s.mb.i+1));
+    if(hasPG||mbTouch)continue;
+    if(s.subs.some(y=>y!==x&&segIdx.includes(y.i)))return false;
+    if(x.t!=='me'&&x.t!=='et')return false}}
+  if(k==='alkyne'&&s.mb&&(x.i===s.mb.i||x.i===s.mb.i+1))return false}
+ for(let i=0;i<n;i++)if(used[i]>4)return false;
+ // terminal carbons: at most one non-H substituent besides chain (keeps drawings clean)
+ for(const e of [0,n-1]){const cnt=s.subs.filter(x=>x.i===e).length+(s.pg===e&&!TERMPG[k]?1:0);if(cnt>1)return false}
+ // keep internal carbons to max 2 drawn substituents
+ for(let i=1;i<n-1;i++){const cnt=s.subs.filter(x=>x.i===i).length+(s.pg===i?(k==='ketone'?1:1):0);if(cnt>2)return false}
+ if(k==='halide'&&!s.subs.some(x=>HALSUB[x.t]))return false;
+ return true}
+/* numbering + name */
+function brNumbering(s){const n=s.n;const opts=[0,1].map(r=>{const L=i=>r?n-i:i+1;
+  const pl=s.pg!=null&&s.k!=='alkane'&&s.k!=='halide'?L(s.pg):0;const ml=s.mb?Math.min(L(s.mb.i),L(s.mb.i+1)):0;
+  const subs=s.subs.map(x=>({loc:L(x.i),nm:subName(x.t)}));
+  const locs=subs.map(x=>x.loc).sort((a,b)=>a-b);
+  const alpha=subs.slice().sort((a,b)=>akey(a.nm).localeCompare(akey(b.nm))||a.loc-b.loc).map(x=>x.loc);
+  return {r,pl,ml,locs,alpha,subs}});
+ const cmp=(a,b)=>{for(let i=0;i<Math.max(a.length,b.length);i++){if((a[i]||0)!==(b[i]||0))return (a[i]||0)-(b[i]||0)}return 0};
+ const [A,B]=opts;let c=A.pl-B.pl;if(!c)c=A.ml-B.ml;if(!c)c=cmp(A.locs,B.locs);if(!c)c=cmp(A.alpha,B.alpha);
+ return {best:c<=0?A:B,other:c<=0?B:A,tie:c===0}}
+function brPrefix(subs,opt){opt=opt||{};const g={};subs.forEach(x=>{(g[x.nm]=g[x.nm]||[]).push(x.loc)});
+ let names=Object.keys(g).sort((a,b)=>akey(a).localeCompare(akey(b)));if(opt.reverse)names=names.reverse();
+ return names.map(nm=>{const L=g[nm].sort((a,b)=>a-b);return `${L.join(',')}-${opt.noMult?'':MULT[L.length]}${nm}`}).join('-')}
+function brParent(s,pl,ml,nOverride){const n=nOverride||s.n,st=STX[n],k=s.k;
+ switch(k){case 'alkane':case 'halide':return st+'ane';
+  case 'alkene':return (n<=3?'':ml+'-')+st+'ene';case 'alkyne':return (n<=3?'':ml+'-')+st+'yne';
+  case 'alcohol':return (n<=2?'':pl+'-')+st+'anol';case 'amine':return (n<=2?'':pl+'-')+st+'anamine';
+  case 'ketone':return n===3?'propanone':pl+'-'+st+'anone';
+  case 'aldehyde':return st+'anal';case 'acid':return st+'anoic acid';case 'amide':return st+'anamide';
+  case 'ester':return st+'anoate'}}
+function brJoin(pre,par){if(!pre)return par;return /^\d/.test(par)?pre+'-'+par:pre+par}
+function brName(s,opt){opt=opt||{};const N=brNumbering(s);const d=opt.wrongDir?N.other:N.best;
+ let nm=brJoin(brPrefix(d.subs,opt),brParent(s,d.pl,d.ml,opt.n));
+ if(s.k==='ester')nm=ALK(s.b)+' '+nm;return nm}
+FAM.br={grp:'branched',build:brBuild,name:s=>brName(s),grpOf:s=>BRGRP[s.k],
+ cls:s=>{if(s.k==='amine')return 1;const n=s.n;let c=(s.pg>0?1:0)+(s.pg<n-1?1:0)+s.subs.filter(x=>x.i===s.pg&&ALKSUB[x.t]).length;return Math.max(1,c)}};
+/* random generator for a class */
+const BR_N={alkane:[5,8],halide:[3,7],alkene:[4,7],alkyne:[4,7],alcohol:[3,7],aldehyde:[3,7],ketone:[4,7],acid:[3,7],ester:[3,6],amine:[3,6],amide:[3,6]};
+function brRandom(k,opt){opt=opt||{};for(let tries=0;tries<400;tries++){const [a,b]=BR_N[k];const n=rnd(a,b);const s={f:'br',k,n,pg:null,mb:null,subs:[],flip:Math.random()<.5};
+  if(k==='alkene'||k==='alkyne')s.mb={i:rnd(0,n-2),o:k==='alkene'?2:3};
+  if(TERMPG[k])s.pg=n-1;else if(k==='ketone')s.pg=rnd(1,n-2);else if(k==='alcohol'||k==='amine')s.pg=rnd(0,n-1);
+  if(k==='ester')s.b=rnd(1,3);
+  const want=opt.min1?rnd(1,2):(k==='alkane'?rnd(2,3):rnd(1,3));
+  const pool=opt.alkylOnly&&k!=='halide'?['me','me','me','et','ipr']:['me','me','me','et','ipr','tbu','Cl','Br','F'];
+  for(let j=0;j<want;j++){const t=k==='halide'&&j===0?pickOne(['Cl','Br','Cl','F','I']):pickOne(pool);s.subs.push({i:rnd(0,n-1),t})}
+  if(!brValid(s))continue;
+  const big=s.subs.some(x=>x.t!=='me'&&ALKSUB[x.t]);if(!opt.min1&&s.subs.length<2&&!big)continue;
+  if(k==='alkane'&&s.subs.length<2&&!big)continue;
+  return s}
+ return {f:'br',k:'alkane',n:6,pg:null,mb:null,subs:[{i:1,t:'me'},{i:3,t:'me'}]}}
+R.br=(k,opt)=>brRandom(k||pickOne(Object.keys(BR_N)),opt);
+/* wrong-name distractors that mirror real student mistakes */
+function brWrongNames(s){const right=brName(s),out=new Set();const N=brNumbering(s);
+ const tryAdd=x=>{if(x&&x!==right)out.add(x)};
+ if(!N.tie)tryAdd(brName(s,{wrongDir:true}));
+ if(new Set(s.subs.map(x=>subName(x.t))).size>1)tryAdd(brName(s,{reverse:true}));
+ if(s.subs.length>new Set(s.subs.map(x=>subName(x.t))).size)tryAdd(brName(s,{noMult:true}));
+ // wrong parent chain length (counted the straight drawing or included a branch)
+ if(s.subs.some(x=>ALKSUB[x.t]))tryAdd(brName(s,{n:s.n+1>8?s.n-1:s.n+1}));
+ // a structurally different but close compound
+ for(let g=0;g<60&&out.size<5;g++){const m=brMutate(s);if(m)tryAdd(brName(m))}
+ return shuf([...out])}
+function brMutate(s){const m=JSON.parse(JSON.stringify(s));const r=Math.random();
+ if(r<.4&&m.subs.length){const x=pickOne(m.subs);x.i=x.i+(Math.random()<.5?1:-1)}
+ else if(r<.6&&m.subs.length){const x=pickOne(m.subs);if(ALKSUB[x.t])x.t=x.t==='me'?'et':'me';else x.t=x.t==='Cl'?'Br':'Cl'}
+ else if(r<.8){if(m.mb)m.mb.i+=Math.random()<.5?1:-1;else if(m.pg!=null&&!TERMPG[m.k])m.pg+=Math.random()<.5?1:-1;else m.n+=1}
+ else{m.n+=Math.random()<.5?1:-1;if(TERMPG[m.k])m.pg=m.n-1}
+ return brValid(m)?m:null}
+function brDistinctSpecs(s,k){const seen=new Set([brName(s)]),out=[];for(let g=0;g<300&&out.length<k;g++){const m=brMutate(g<150?s:pickOne([s,...out]));if(!m)continue;const nmx=brName(m);if(!seen.has(nmx)){seen.add(nmx);out.push(m)}}return out}
+function brWhy(s){const N=brNumbering(s).best,n=s.n,k=s.k;const steps=[];
+ const pgTxt={alcohol:'–OH',amine:'–NH₂',ketone:'C=O',aldehyde:'–CHO',acid:'–COOH',ester:'ester C=O',amide:'amide C=O'}[k];
+ steps.push(`<b>1. Main chain:</b> ${n} carbons (${STX[n]}-)${pgTxt?' that include the '+pgTxt:''}${s.mb?' and the '+(s.mb.o===2?'C=C':'C≡C'):''}.`);
+ if(TERMPG[k])steps.push(`<b>2. Number:</b> the ${pgTxt} carbon is always C1.`);
+ else if(N.pl)steps.push(`<b>2. Number:</b> from the end that gives the ${pgTxt} the lowest number (C${N.pl}).`);
+ else if(N.ml)steps.push(`<b>2. Number:</b> from the end that gives the ${s.mb.o===2?'double':'triple'} bond the lowest number (C${N.ml}).`);
+ else steps.push(`<b>2. Number:</b> from the end that gives the branches the lowest numbers (${N.locs.join(',')}).`);
+ const g={};N.subs.forEach(x=>{(g[x.nm]=g[x.nm]||[]).push(x.loc)});
+ const names=Object.keys(g).sort((a,b)=>akey(a).localeCompare(akey(b)));
+ if(names.length)steps.push(`<b>3. Branches:</b> ${names.map(x=>`${MULT[g[x].length]}${x} at ${g[x].sort((a,b)=>a-b).join(', ')}`).join('; ')}. List them alphabetically${names.length>1?' (ignore di-, tri- and tert- when alphabetizing)':''}.`);
+ steps.push(`<b>Name:</b> ${esc(brName(s))}`);return steps.join('<br>')}
+const BR_HINT='🏆 Challenge: (1) find the longest chain that holds the functional group, (2) number from the end nearest the functional group (then nearest the first branch), (3) list branches alphabetically; di-, tri- and tert- don\'t count.';
+
 /* ---- question generators: return {kind,html,options:[{key,html}],answer,hint,why} ---- */
 function genSpot(){const g=spotBag();const fam=pickOne(GRP_R[g]);let s=R[fam]();const style=structStyle();
+ if(BR_N[g]&&Math.random()<.4)s=R.br(g,{alkylOnly:true,min1:true});
  if(style==='condensed'&&g==='aromatic')s=R.arene();
  const others=shuf(CONF[g]).slice(0,2);const rest=shuf(Object.keys(GN).filter(x=>x!==g&&!others.includes(x)));const opts=shuf([g,...others,rest[0]]);
  const tail=(g==='amine'||g==='amide'||g==='ester'||g==='acid')?'':'';
  return {kind:'spot',html:`<p class="prompt">Which functional group is in this compound?</p><div class="struct">${structHTML(s,style)}</div>`,options:opts.map(o=>({key:o,html:GN[o]})),smi:smiles(bd(s)),sname:nm(s),answer:g,hint:'Look for the key atoms: C=O (carbonyl), O, N, halogens or multiple bonds. Then check what is attached to them.',why:`${GN[g]}: the compound ${GD[g]} This is ${nm(s)}.`,cols:2}}
-function genClassify(){const f=clsBag();const s=R[f]();const cl=FAM[s.f].cls(s);const what=FAM[s.f].grp;const label=['','Primary (1°)','Secondary (2°)','Tertiary (3°)'];
+function genClassify(){const f=clsBag();let s=R[f]();if((f==='alcohol'||f==='alcohol3')&&Math.random()<.5)s=R.br('alcohol',{alkylOnly:true,min1:true});else if(f==='amine1'&&Math.random()<.5)s=R.br('amine',{alkylOnly:true,min1:true});const cl=FAM[s.f].cls(s);const what=FAM[s.f].grpOf?FAM[s.f].grpOf(s):FAM[s.f].grp;const label=['','Primary (1°)','Secondary (2°)','Tertiary (3°)'];
  const why=what==='alcohol'?`Look at the carbon that carries the –OH. It is bonded to ${cl} other carbon${cl>1?'s':''}, so this is a ${label[cl].toLowerCase()} alcohol.`:what==='amine'?`Count the carbon groups attached to nitrogen: ${cl}. So this is a ${label[cl].toLowerCase()} amine (${nm(s)}).`:`Count the carbon groups on the nitrogen, not counting the carbonyl carbon: ${cl-1}. ${cl===1?'Only H atoms are on N':'N has '+(cl-1)+' alkyl group'+(cl>2?'s':'')}, so this is a ${label[cl].toLowerCase()} amide (${nm(s)}).`;
  const hint=what==='alcohol'?'Find the carbon attached to the –OH, then count how many other carbons it is bonded to.':what==='amine'?'Count the number of carbon groups attached directly to the nitrogen.':'For an amide, count the carbon groups on nitrogen, not counting the carbonyl carbon (0 = primary, 1 = secondary, 2 = tertiary).';
  return {kind:'classify',smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">Classify this ${what} as primary, secondary or tertiary.</p><div class="struct">${structHTML(s,structStyle())}</div>`,options:[1,2,3].map(i=>({key:String(i),html:label[i]})),answer:String(cl),hint,why,cols:3}}
@@ -362,9 +591,9 @@ function nameWhy(s){const g=FAM[s.f].grp,n=nm(s),c=FAM[s.f].common?FAM[s.f].comm
  const extra=c?` Common name: ${c}.`:'';
  const sch={alkane:'Count the carbons in the chain and add -ane.',alkene:'Use the longest chain with the C=C, number from the end nearest the double bond, and use -ene.',alkyne:'Use the longest chain with the C≡C, number from the end nearest the triple bond, and use -yne.',halide:'Name the halogen as a prefix (chloro, bromo) with its number, then the alkane name.',alcohol:'Use the longest chain that has the –OH, number from the end nearest the –OH, and change -e to -ol (branches such as methyl go in front).',ether:'Name the shorter group as an alkoxy prefix (methoxy, ethoxy) on the longer alkane chain.',aldehyde:'The C=O is at the chain end (carbon 1). Change -e to -al.',ketone:'Number from the end nearest the C=O and change -e to -one.',acid:'Count all carbons including the –COOH carbon and change -e to -oic acid.',ester:'Name the alkyl group on the O first, then the acid part with -oate.',amine:'Name the alkyl groups on N in alphabetical order, then add -amine (primary amines may also use -anamine with a number).',amide:'Count the carbons in the acyl part and change -e to -amide; groups on N are written N-.'}[g];
  return `${n}. ${sch}${extra}`}
-function genName(){const f=nameBag();const s=R[f]();const style=structStyle();const others=distinctOptions(s,3);const opts=shuf([s,...others]).map(x=>({key:nm(x),html:nm(x)}));
+function genName(){if(useChallenge())return genNameBr();const f=nameBag();const s=R[f]();const style=structStyle();const others=distinctOptions(s,3);const opts=shuf([s,...others]).map(x=>({key:nm(x),html:nm(x)}));
  return {kind:'name',smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">What is the name of this compound?</p><div class="struct">${structHTML(s,style)}</div>`,options:opts,answer:nm(s),hint:'Find the functional group first, then count the carbons in the main chain and number from the end nearest the group.',why:nameWhy(s),cols:2}}
-function genMatch(){const f=nameBag();const s=R[f]();const others=distinctOptions(s,3);const opts=shuf([s,...others]).map(x=>({key:nm(x),html:optSVG(x),struct:true}));
+function genMatch(){if(useChallenge())return genMatchBr();const f=nameBag();const s=R[f]();const others=distinctOptions(s,3);const opts=shuf([s,...others]).map(x=>({key:nm(x),html:optSVG(x),struct:true}));
  return {kind:'match',smi:smiles(bd(s)),sname:nm(s),optSmi:Object.fromEntries([s,...others].map(x=>[nm(x),smiles(bd(x))])),html:`<p class="prompt">Which structure is <strong>${esc(nm(s))}</strong>?</p><p class="footer-note">Pick the drawing that matches the name.</p>`,options:opts,answer:nm(s),hint:'Decode the name: the stem tells you the chain length, the ending tells you the functional group, and the number tells you where it is.',why:nameWhy(s),cols:2,struct:true}}
 
 /* ---- properties ---- */
@@ -461,7 +690,56 @@ function genMed(){const mol=medPick();const sel=medSelect(mol);const pic=`<div c
  const t=pickOne(sel);const ds=shuf(MCONF[t.g]||[]).filter(x=>x!==t.g).slice(0,3);const pool=shuf(Object.keys(MGN).filter(x=>x!==t.g&&!ds.includes(x)));while(ds.length<3)ds.push(pool.pop());
  return {kind:'med',noLetters:true,html:`<p class="prompt">What functional group is highlighted at ${medChip(t)}?</p>${pic2}`,options:shuf([t.g,...ds]).map(o=>({key:o,html:MGN[o]})),answer:t.g,hint:MHINT[t.g]||'Look at which atoms are inside the highlight.',why:`Label ${t.L} is the ${MGN[t.g].toLowerCase()}: it ${MGD[t.g]}`+medFact(mol,sel),cols:2}}
 
-const GEN={spot:genSpot,classify:genClassify,name:genName,match:genMatch,react:genReact,props:genProps,med:genMed};
+/* ===== Challenge-level generators ===== */
+function useChallenge(){if(typeof BLITZ!=='undefined'&&BLITZ.on)return false;const l=state.level;return l==='challenge'||(l==='mixed'&&Math.random()<.35)}
+const CHAL_TAG='<span class="chal">🏆 Challenge</span>';
+function genNameBr(){const s=R.br(pickOne(Object.keys(BR_N)));const style=structStyle();const wrong=brWrongNames(s).slice(0,3);
+ const opts=shuf([nm(s),...wrong]).map(x=>({key:x,html:esc(x)}));
+ return {kind:'name',challenge:true,smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">${CHAL_TAG} What is the IUPAC name of this compound?</p><div class="struct">${structHTML(s,style)}</div>`,options:opts,answer:nm(s),hint:BR_HINT,why:brWhy(s),cols:2}}
+function genMatchBr(){const s=R.br(pickOne(Object.keys(BR_N)));const others=brDistinctSpecs(s,3);const all=[s,...others];
+ return {kind:'match',challenge:true,smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">${CHAL_TAG} Which structure is <strong>${esc(nm(s))}</strong>?</p><p class="footer-note">Decode the name piece by piece: parent chain, functional group, then each branch.</p>`,options:shuf(all).map(x=>({key:nm(x),html:optSVG(x),struct:true})),answer:nm(s),hint:BR_HINT,why:brWhy(s),cols:2,struct:true}}
+
+/* ===== Blitz mode ===== */
+const BLITZ={on:false,end:0,score:0,n:0,streak:0,miss:[],timer:null,len:60,lock:false,q:null};
+const BKEY='itsdrdan-groups-blitz-best';
+const blitzBest=()=>{try{return +localStorage.getItem(BKEY)||0}catch{return 0}};
+function blitzStop(){BLITZ.on=false;clearInterval(BLITZ.timer);BLITZ.timer=null}
+function blitzEnter(){blitzStop();const best=blitzBest();
+ $('questionArea').innerHTML=`<div class="blitz-start"><div class="bz-bolt">⚡</div><h3>Blitz: 60 seconds</h3><p>Answer as many as you can. Tap an answer and it checks right away.</p>
+ <ul class="bz-rules"><li>✅ Right: +1 point (bonus every 5 in a row)</li><li>❌ Wrong: no penalty, but the streak resets</li><li>🎯 Mix of Spot the Group, 1°/2°/3°, Name It and Med Molecules</li></ul>
+ <div class="bz-best">Your best: <b>${best}</b></div><button class="action primary bz-go" id="bzGo" type="button">Start Blitz ⚡</button></div>`;
+ $('bzGo').onclick=blitzStart}
+function blitzStart(){BLITZ.on=true;BLITZ.score=0;BLITZ.n=0;BLITZ.streak=0;BLITZ.miss=[];BLITZ.end=Date.now()+BLITZ.len*1000;mascot('wow',1500);
+ $('questionArea').innerHTML=`<div class="bz-bar"><div class="bz-time"><div class="bz-fill" id="bzFill"></div></div><div class="bz-stats"><span class="pill">⏱ <b id="bzSec">60</b>s</span><span class="pill">⚡ <b id="bzScore">0</b></span><span class="pill">🔥 <b id="bzStreak">0</b></span></div></div><div id="bzQ"></div>`;
+ BLITZ.timer=setInterval(blitzTick,100);blitzNext()}
+function blitzTick(){const left=Math.max(0,BLITZ.end-Date.now());const f=$('bzFill');if(!f){blitzStop();return}
+ f.style.width=(left/(BLITZ.len*10))+'%';f.classList.toggle('low',left<10000);$('bzSec').textContent=Math.ceil(left/1000);if(left<=0)blitzFinish()}
+function blitzGen(){const g=pickOne(['spot','spot','classify','name','name','med']);let q;
+ if(g==='med'){for(let i=0;i<20;i++){q=genMed();if(!q.options.some(o=>/^[ABC]$/.test(o.key)))break}}else q=GEN[g]();q.btype=g;return q}
+function blitzNext(){if(!BLITZ.on)return;let q;try{q=blitzGen()}catch(e){console.error(e);q=genSpot()}BLITZ.q=q;BLITZ.lock=false;
+ const opts=`<div class="options cols2 bz-opts${q.struct?' struct-opts':''}">${q.options.map(o=>`<button type="button" class="option" data-key="${esc(o.key)}"><span class="opt-body">${o.html}</span></button>`).join('')}</div>`;
+ $('bzQ').innerHTML=`<div class="bz-q">${q.html}</div>${opts}`;
+ $('bzQ').querySelectorAll('.option').forEach(b=>b.onclick=()=>blitzAnswer(b))}
+function blitzAnswer(b){if(BLITZ.lock||!BLITZ.on)return;BLITZ.lock=true;const q=BLITZ.q;BLITZ.n++;const ok=b.dataset.key===q.answer;
+ try{if(window.ddTrack){const m=MODES.find(x=>x.id===q.btype);ddTrack({game:'functionalgroups',course:'3B',mode:'Blitz',topic:m?m.title:q.btype,correct:ok})}}catch(e){}
+ $('bzQ').querySelectorAll('.option').forEach(x=>{x.disabled=true;if(x.dataset.key===q.answer)x.classList.add('right')});
+ if(ok){BLITZ.score++;BLITZ.streak++;if(BLITZ.streak%5===0){BLITZ.score++;toast('🔥 '+BLITZ.streak+' in a row! +1 bonus')}mascot('happy',600)}
+ else{b.classList.add('wrong');BLITZ.streak=0;mascot('hmm',900);const ans=q.options.find(o=>o.key===q.answer);BLITZ.miss.push({what:q.btype==='name'?'':(q.sname||''),ans:ans?ans.html:q.answer,type:q.btype})}
+ $('bzScore').textContent=BLITZ.score;$('bzStreak').textContent=BLITZ.streak;setTimeout(blitzNext,ok?320:1150)}
+function blitzFinish(){if(!BLITZ.on)return;blitzStop();const best=blitzBest(),sc=BLITZ.score,isBest=sc>best;if(isBest){try{localStorage.setItem(BKEY,sc)}catch{}}
+ const right=BLITZ.n-BLITZ.miss.length,acc=BLITZ.n?Math.round(100*right/BLITZ.n):0;
+ journey.xp+=sc*5;journey.modes.blitz=(journey.modes.blitz||0)+right;journey.blitzBest=Math.max(journey.blitzBest||0,sc);
+ BADGES.forEach(b=>{if(!journey.badges[b.id]&&b.ok(journey)){journey.badges[b.id]=1;toast('Badge earned: '+b.t)}});jSave();renderJourney();
+ if(sc>=5)confetti();mascot(isBest?'wow':'happy',4000);
+ const missed=BLITZ.miss.filter(m=>m.type!=='med').slice(0,6);
+ $('questionArea').innerHTML=`<div class="blitz-start bz-done"><div class="bz-bolt">${isBest?'🏆':'⚡'}</div><h3>${isBest?'New best score!':'Time!'}</h3>
+ <div class="bz-result"><div><b>${sc}</b>points</div><div><b>${right}/${BLITZ.n}</b>correct</div><div><b>${acc}%</b>accuracy</div><div><b>${Math.max(best,sc)}</b>best</div></div>
+ <p class="xp-note">+${sc*5} XP added to your Chemistry Journey.</p>
+ ${missed.length?`<div class="bz-miss"><b>Review these:</b><ul>${missed.map(m=>`<li>${m.type==='name'?'Correct name: ':''}${m.what?esc(m.what)+' → ':''}${m.ans}</li>`).join('')}</ul></div>`:''}
+ <button class="action primary bz-go" id="bzGo" type="button">Play again ⚡</button></div>`;
+ $('bzGo').onclick=blitzStart}
+
+const GEN={spot:genSpot,classify:genClassify,name:genName,match:genMatch,react:genReact,props:genProps,med:genMed,blitz:genSpot};
 
 /* ===== UI state, journey, rendering ===== */
 const MODES=[
@@ -471,7 +749,8 @@ const MODES=[
  {id:'match',title:'Draw It',short:'Pick the structure for a name',icon:'<path d="M12 36 36 12M30 10l8 8-22 22-10 2 2-10z"/>'},
  {id:'react',title:'Predict the Product',short:'Oxidation, esters, amides & more',icon:'<path d="M6 24h30m-8-8 8 8-8 8"/><circle cx="42" cy="24" r="3"/>'},
  {id:'props',title:'Properties',short:'Boiling point, H-bonding, solubility',icon:'<path d="M24 6C24 6 12 22 12 30a12 12 0 0 0 24 0C36 22 24 6 24 6z"/>'},
- {id:'med',title:'Med Molecules',short:'Spot groups in real drugs & body molecules',isNew:true,icon:'<rect x="6" y="17" width="36" height="14" rx="7" transform="rotate(-35 24 24)"/><path d="m18 33 12-17"/>'}
+ {id:'med',title:'Med Molecules',short:'Spot groups in real drugs & body molecules',icon:'<rect x="6" y="17" width="36" height="14" rx="7" transform="rotate(-35 24 24)"/><path d="m18 33 12-17"/>'},
+ {id:'blitz',title:'Blitz',short:'60-second rapid-fire round',isNew:true,icon:'<path d="M27 4 10 27h13l-3 17 18-24H25z"/>'}
 ];
 const JKEY='itsdrdan-groups-journey-v1';
 const jBlank=()=>({xp:0,correct:0,assisted:0,best:0,modes:{},badges:{}});
@@ -487,7 +766,10 @@ const BADGES=[
  {id:'namer',t:'🏷 Namer',d:'10 correct in Name It',ok:j=>(j.modes.name||0)>=10},
  {id:'chemist',t:'⚗ Reaction Chemist',d:'10 correct in Predict the Product',ok:j=>(j.modes.react||0)>=10},
  {id:'clinical',t:'🩺 Clinical Eye',d:'10 correct in Med Molecules',ok:j=>(j.modes.med||0)>=10},
- {id:'explorer',t:'🧭 Explorer',d:'Answer in all seven modes',ok:j=>MODES.every(m=>(j.modes[m.id]||0)>0)}
+ {id:'champ',t:'🏆 Challenge Champ',d:'10 correct challenge names',ok:j=>(j.chal||0)>=10},
+ {id:'blitz10',t:'⚡ Lightning',d:'Score 10+ in one Blitz',ok:j=>(j.blitzBest||0)>=10},
+ {id:'blitz20',t:'🌩 Storm Chaser',d:'Score 20+ in one Blitz',ok:j=>(j.blitzBest||0)>=20},
+ {id:'explorer',t:'🧭 Explorer',d:'Answer in all eight modes',ok:j=>MODES.every(m=>(j.modes[m.id]||0)>0)}
 ];
 const AQUA={"normal": "<defs><radialGradient id=\"ab\" cx=\".35\" cy=\".28\" r=\".85\"><stop offset=\"0\" stop-color=\"#f1fbff\"/><stop offset=\".55\" stop-color=\"#a9e0fb\"/><stop offset=\"1\" stop-color=\"#7cc6f2\"/></radialGradient>\n<radialGradient id=\"ah\" cx=\".35\" cy=\".3\" r=\".9\"><stop offset=\"0\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#ffe6ee\"/></radialGradient></defs>\n<ellipse cx=\"120\" cy=\"238\" rx=\"62\" ry=\"8\" fill=\"#a07a4c\" opacity=\".12\"/><ellipse cx=\"94\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><ellipse cx=\"146\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><circle cx=\"62\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"62\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"178\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"178\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"120\" cy=\"150\" r=\"74\" fill=\"url(#ab)\" stroke=\"#4fa6dc\" stroke-width=\"5\"/><path d=\"M62 118a64 64 0 0 1 24-32\" stroke=\"#fff\" stroke-width=\"8\" stroke-linecap=\"round\" fill=\"none\" opacity=\".65\"/><circle cx=\"96\" cy=\"76\" r=\"4\" fill=\"#fff\" opacity=\".7\"/><g transform=\"translate(120 150) scale(1.55)\"><ellipse cx=\"-15\" cy=\"0\" rx=\"4.8\" ry=\"6\" fill=\"#3b2f33\"/><ellipse cx=\"15\" cy=\"0\" rx=\"4.8\" ry=\"6\" fill=\"#3b2f33\"/><circle cx=\"-16.5\" cy=\"-2.2\" r=\"2\" fill=\"#fff\"/><circle cx=\"13.5\" cy=\"-2.2\" r=\"2\" fill=\"#fff\"/><circle cx=\"-13.4\" cy=\"2.4\" r=\"1.05\" fill=\"#fff\"/><circle cx=\"16.6\" cy=\"2.4\" r=\"1.05\" fill=\"#fff\"/><path d=\"M-4.5 8q2.2 3.4 4.5 0q2.3 3.4 4.5 0\" fill=\"none\" stroke=\"#3b2f33\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><ellipse cx=\"-25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/><ellipse cx=\"25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/></g><circle cx=\"89\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"99\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"141\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"151\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><text x=\"120\" y=\"204\" text-anchor=\"middle\" font-size=\"21\" font-weight=\"900\" fill=\"#3f93cc\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H₂O</text>", "happy": "<defs><radialGradient id=\"ab\" cx=\".35\" cy=\".28\" r=\".85\"><stop offset=\"0\" stop-color=\"#f1fbff\"/><stop offset=\".55\" stop-color=\"#a9e0fb\"/><stop offset=\"1\" stop-color=\"#7cc6f2\"/></radialGradient>\n<radialGradient id=\"ah\" cx=\".35\" cy=\".3\" r=\".9\"><stop offset=\"0\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#ffe6ee\"/></radialGradient></defs>\n<ellipse cx=\"120\" cy=\"238\" rx=\"62\" ry=\"8\" fill=\"#a07a4c\" opacity=\".12\"/><ellipse cx=\"94\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><ellipse cx=\"146\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><circle cx=\"62\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"62\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"178\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"178\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"120\" cy=\"150\" r=\"74\" fill=\"url(#ab)\" stroke=\"#4fa6dc\" stroke-width=\"5\"/><path d=\"M62 118a64 64 0 0 1 24-32\" stroke=\"#fff\" stroke-width=\"8\" stroke-linecap=\"round\" fill=\"none\" opacity=\".65\"/><circle cx=\"96\" cy=\"76\" r=\"4\" fill=\"#fff\" opacity=\".7\"/><g transform=\"translate(120 150) scale(1.55)\"><path d=\"M-21 2q6-9 12 0M9 2q6-9 12 0\" fill=\"none\" stroke=\"#3b2f33\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M-7 7q7 11 14 0z\" fill=\"#ff7f93\" stroke=\"#3b2f33\" stroke-width=\"2.2\" stroke-linejoin=\"round\"/><ellipse cx=\"-25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/><ellipse cx=\"25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/></g><circle cx=\"89\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"99\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"141\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"151\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><text x=\"120\" y=\"204\" text-anchor=\"middle\" font-size=\"21\" font-weight=\"900\" fill=\"#3f93cc\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H₂O</text>", "wow": "<defs><radialGradient id=\"ab\" cx=\".35\" cy=\".28\" r=\".85\"><stop offset=\"0\" stop-color=\"#f1fbff\"/><stop offset=\".55\" stop-color=\"#a9e0fb\"/><stop offset=\"1\" stop-color=\"#7cc6f2\"/></radialGradient>\n<radialGradient id=\"ah\" cx=\".35\" cy=\".3\" r=\".9\"><stop offset=\"0\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#ffe6ee\"/></radialGradient></defs>\n<ellipse cx=\"120\" cy=\"238\" rx=\"62\" ry=\"8\" fill=\"#a07a4c\" opacity=\".12\"/><ellipse cx=\"94\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><ellipse cx=\"146\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><circle cx=\"62\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"62\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"178\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"178\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"120\" cy=\"150\" r=\"74\" fill=\"url(#ab)\" stroke=\"#4fa6dc\" stroke-width=\"5\"/><path d=\"M62 118a64 64 0 0 1 24-32\" stroke=\"#fff\" stroke-width=\"8\" stroke-linecap=\"round\" fill=\"none\" opacity=\".65\"/><circle cx=\"96\" cy=\"76\" r=\"4\" fill=\"#fff\" opacity=\".7\"/><g transform=\"translate(120 150) scale(1.55)\"><ellipse cx=\"-15\" cy=\"0\" rx=\"5.6\" ry=\"7\" fill=\"#3b2f33\"/><ellipse cx=\"15\" cy=\"0\" rx=\"5.6\" ry=\"7\" fill=\"#3b2f33\"/><circle cx=\"-16.8\" cy=\"-2.6\" r=\"2.4\" fill=\"#fff\"/><circle cx=\"13.2\" cy=\"-2.6\" r=\"2.4\" fill=\"#fff\"/><circle cx=\"-13.2\" cy=\"3\" r=\"1.2\" fill=\"#fff\"/><circle cx=\"16.8\" cy=\"3\" r=\"1.2\" fill=\"#fff\"/><ellipse cx=\"0\" cy=\"10\" rx=\"3.6\" ry=\"4.6\" fill=\"#ff7f93\" stroke=\"#3b2f33\" stroke-width=\"2\"/><ellipse cx=\"-25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/><ellipse cx=\"25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/></g><circle cx=\"89\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"99\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"141\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"151\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><text x=\"120\" y=\"204\" text-anchor=\"middle\" font-size=\"21\" font-weight=\"900\" fill=\"#3f93cc\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H₂O</text>", "hmm": "<defs><radialGradient id=\"ab\" cx=\".35\" cy=\".28\" r=\".85\"><stop offset=\"0\" stop-color=\"#f1fbff\"/><stop offset=\".55\" stop-color=\"#a9e0fb\"/><stop offset=\"1\" stop-color=\"#7cc6f2\"/></radialGradient>\n<radialGradient id=\"ah\" cx=\".35\" cy=\".3\" r=\".9\"><stop offset=\"0\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#ffe6ee\"/></radialGradient></defs>\n<ellipse cx=\"120\" cy=\"238\" rx=\"62\" ry=\"8\" fill=\"#a07a4c\" opacity=\".12\"/><ellipse cx=\"94\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><ellipse cx=\"146\" cy=\"226\" rx=\"17\" ry=\"9\" fill=\"#8fd2f6\" stroke=\"#4fa6dc\" stroke-width=\"3\"/><circle cx=\"62\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"62\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"178\" cy=\"76\" r=\"30\" fill=\"url(#ah)\" stroke=\"#ffb0c4\" stroke-width=\"5\"/><text x=\"178\" y=\"87\" text-anchor=\"middle\" font-size=\"31\" font-weight=\"900\" fill=\"#ff86a3\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H</text><circle cx=\"120\" cy=\"150\" r=\"74\" fill=\"url(#ab)\" stroke=\"#4fa6dc\" stroke-width=\"5\"/><path d=\"M62 118a64 64 0 0 1 24-32\" stroke=\"#fff\" stroke-width=\"8\" stroke-linecap=\"round\" fill=\"none\" opacity=\".65\"/><circle cx=\"96\" cy=\"76\" r=\"4\" fill=\"#fff\" opacity=\".7\"/><g transform=\"translate(120 150) scale(1.55)\"><ellipse cx=\"-15\" cy=\"1\" rx=\"4.8\" ry=\"6\" fill=\"#3b2f33\"/><ellipse cx=\"15\" cy=\"1\" rx=\"4.8\" ry=\"6\" fill=\"#3b2f33\"/><circle cx=\"-16.5\" cy=\"-1.4\" r=\"2\" fill=\"#fff\"/><circle cx=\"13.5\" cy=\"-1.4\" r=\"2\" fill=\"#fff\"/><path d=\"M-22 -11l12 -3M22 -11l-12 -3\" stroke=\"#3b2f33\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><path d=\"M-6 11q3-3 6 0t6 0\" fill=\"none\" stroke=\"#3b2f33\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><path d=\"M26 -8q-4 6 0 9q4-3 0-9z\" fill=\"#bfe6ff\" stroke=\"#4fa6dc\" stroke-width=\"1.4\"/><ellipse cx=\"-25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/><ellipse cx=\"25\" cy=\"8\" rx=\"6.5\" ry=\"4\" fill=\"#ff8fb0\" opacity=\".55\"/></g><circle cx=\"89\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"99\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"141\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><circle cx=\"151\" cy=\"226\" r=\"3.3\" fill=\"#222\"/><text x=\"120\" y=\"204\" text-anchor=\"middle\" font-size=\"21\" font-weight=\"900\" fill=\"#3f93cc\" font-family=\"Arial Rounded MT Bold,Nunito,Arial,sans-serif\">H₂O</text>"};
 let mascotT=0;function mascot(kind,hold){const m=$('mascot');if(!m)return;m.innerHTML='<svg viewBox="12 6 216 246" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+(AQUA[kind]||AQUA.normal)+'</svg>';m.classList.remove('pop');void m.offsetWidth;if(kind!=='normal')m.classList.add('pop');clearTimeout(mascotT);if(hold)mascotT=setTimeout(()=>mascot('normal'),hold)}
@@ -495,14 +777,17 @@ let toastT=0;function toast(t){const el=$('toast');el.textContent=t;el.classList
 function renderJourney(){const lvl=Math.floor(journey.xp/100)+1,into=journey.xp%100;$('jChip').textContent=`Level ${lvl} • ${journey.xp} XP`;$('xpLevel').textContent='Level '+lvl;$('xpFill').style.width=into+'%';$('xpText').textContent=into+' / 100 XP';
  $('modeXp').innerHTML=MODES.map(m=>`<div><b>${journey.modes[m.id]||0}</b>${m.title}</div>`).join('');
  $('jbadges').innerHTML=BADGES.map(b=>`<div class="jbadge ${journey.badges[b.id]?'earned':''}"><div class="bt">${b.t}</div>${b.d}</div>`).join('')}
-function awardXP(assisted){const before=Math.floor(journey.xp/100);if(assisted){journey.xp+=2;journey.assisted++}else{journey.xp+=10+Math.min(state.streak,5)*2;journey.correct++;journey.modes[state.mode]=(journey.modes[state.mode]||0)+1;journey.best=Math.max(journey.best,state.streak)}
+function awardXP(assisted){const before=Math.floor(journey.xp/100);if(assisted){journey.xp+=2;journey.assisted++}else{journey.xp+=10+Math.min(state.streak,5)*2;journey.correct++;journey.modes[state.mode]=(journey.modes[state.mode]||0)+1;if(state.q&&state.q.challenge){journey.xp+=5;journey.chal=(journey.chal||0)+1}journey.best=Math.max(journey.best,state.streak)}
  BADGES.forEach(b=>{if(!journey.badges[b.id]&&b.ok(journey)){journey.badges[b.id]=1;toast('Badge earned: '+b.t)}});if(Math.floor(journey.xp/100)>before)toast('Level up! You reached level '+(Math.floor(journey.xp/100)+1));jSave();renderJourney()}
 
-const state={mode:'spot',style:'mixed',medFocus:'all',q:null,selected:null,done:false,revealed:false,correct:0,streak:0,assisted:0};
+const state={mode:'spot',style:'mixed',medFocus:'all',level:'mixed',q:null,selected:null,done:false,revealed:false,correct:0,streak:0,assisted:0};
 function buildModes(){$('modeGrid').innerHTML=MODES.map(m=>`<button class="mode-btn ${m.id===state.mode?'active':''}" data-mode="${m.id}" aria-pressed="${m.id===state.mode}"><span class="mode-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${m.icon}</svg></span><span class="mode-name">${m.title}${m.isNew?'<span class="newtag">NEW</span>':''}</span><small>${m.short}</small></button>`).join('');
  $('modeGrid').querySelectorAll('button').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;buildModes();nextQ();if(matchMedia('(max-width:700px)').matches)requestAnimationFrame(()=>requestAnimationFrame(()=>{const c=$('practice');window.scrollTo({top:Math.max(0,scrollY+c.getBoundingClientRect().top-8),behavior:'smooth'})}))})}
 function fb(kind,html){const f=$('feedback');f.className='feedback '+kind;f.innerHTML=html}
-function nextQ(){let q;try{q=GEN[state.mode]()}catch(e){console.error(e);q=GEN[state.mode]()}mascot('normal');state.q=q;state.selected=null;state.done=false;state.revealed=false;$('hintBox').className='hintbox';$('hintBox').textContent='';fb('','');
+function nextQ(){if(state.mode!=='blitz'&&BLITZ.on)blitzStop();$('practice').dataset.mode=state.mode;
+ const bz=state.mode==='blitz';['btnRow','hintBox','feedback'].forEach(id=>$(id).classList.toggle('hidden',bz));$('nextBtn').classList.toggle('hidden',bz);$('levelRow').classList.toggle('hidden',!['name','match'].includes(state.mode));
+ if(bz){$('modeTitle').textContent='⚡ Blitz';$('styleRow').classList.add('hidden');$('medRow').classList.add('hidden');$('progressLabel').textContent='60 seconds • mixed questions • tap to answer';blitzEnter();return}
+ let q;try{q=GEN[state.mode]()}catch(e){console.error(e);q=GEN[state.mode]()}mascot('normal');state.q=q;state.selected=null;state.done=false;state.revealed=false;$('hintBox').className='hintbox';$('hintBox').textContent='';fb('','');
  $('modeTitle').textContent=MODES.find(m=>m.id===state.mode).title;$('styleRow').classList.toggle('hidden',!['spot','classify','name','props'].includes(state.mode));$('medRow').classList.toggle('hidden',state.mode!=='med');
  const grid=`<div class="options cols${q.cols||2}${q.struct?' struct-opts':''}" role="group" aria-label="Answer choices">${q.options.map((o,i)=>`<button type="button" class="option" data-key="${esc(o.key)}" aria-pressed="false">${q.noLetters?'':`<span class="opt-letter">${'ABCD'[i]}</span>`}<span class="opt-body">${o.html}</span></button>`).join('')}</div>`;
  $('questionArea').innerHTML=q.html+grid;
@@ -510,7 +795,7 @@ function nextQ(){let q;try{q=GEN[state.mode]()}catch(e){console.error(e);q=GEN[s
  ['checkBtn','hintBtn','showBtn'].forEach(id=>$(id).disabled=false);$('progressLabel').textContent=`${MODES.find(m=>m.id===state.mode).short}`;updateStats()}
 function updateStats(){$('correct').textContent=state.correct;$('streak').textContent=state.streak;$('assisted').textContent=state.assisted}
 function ddLog(ok){try{const q=state.q;if(!q||q.ddLogged||!window.ddTrack)return;q.ddLogged=1;const m=MODES.find(x=>x.id===state.mode);
- ddTrack({game:'functionalgroups',course:'3B',mode:'Practice',topic:m?m.title:state.mode,correct:!!ok});}catch(e){}}
+ ddTrack({game:'functionalgroups',course:'3B',mode:'Practice',topic:m?m.title+(q.challenge?' (Challenge)':''):state.mode,correct:!!ok});}catch(e){}}
 function finish(){ddLog(!state.revealed);state.done=true;['checkBtn','hintBtn','showBtn'].forEach(id=>$(id).disabled=true);const q=state.q;
  $('questionArea').querySelectorAll('.option').forEach(b=>{b.disabled=true;if(b.dataset.key===q.answer)b.classList.add('right')});
  if(state.revealed){state.assisted++;state.streak=0;mascot('normal');fb('good','👀 '+q.why+'<br><small>Assisted: this question earns no point. Try the next one on your own.</small>');awardXP(true)}
@@ -528,7 +813,8 @@ function renderRef(){$('refBody').innerHTML=`<div class="table-scroll"><table cl
 (function(){const KEY='itsdrdan-groups-ui-v2',phone=()=>matchMedia('(max-width:700px)').matches;let ui={};try{ui=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}
  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ui))}catch{}};
  [['howTo',false],['refDetails','desk'],['journey',true],['videoDetails',false]].forEach(([id,def])=>{const el=$(id);const st=ui[id];el.open=st!==undefined?st:(def==='desk'?!phone():def);el.addEventListener('toggle',()=>{ui[id]=el.open;save()})});
- if(ui.style&&['mixed','skeletal','condensed'].includes(ui.style))state.style=ui.style;$('styleSel').value=state.style;$('styleSel').onchange=e=>{state.style=e.target.value;ui.style=state.style;save();nextQ()};
+ if(ui.style&&['mixed','skeletal','condensed','cond2d'].includes(ui.style))state.style=ui.style;$('styleSel').value=state.style;$('styleSel').onchange=e=>{state.style=e.target.value;ui.style=state.style;save();nextQ()};
+ if(['basic','mixed','challenge'].includes(ui.level))state.level=ui.level;const lvSet=()=>document.querySelectorAll('#levelRow [data-lv]').forEach(b=>{const on=b.dataset.lv===state.level;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});lvSet();document.querySelectorAll('#levelRow [data-lv]').forEach(b=>b.onclick=()=>{state.level=b.dataset.lv;ui.level=state.level;save();lvSet();nextQ()});
  if(ui.medFocus&&MEDLIB.some(m=>ui.medFocus==='all'||m.tags.includes(ui.medFocus)))state.medFocus=ui.medFocus;$('medSel').value=state.medFocus;$('medSel').onchange=e=>{state.medFocus=e.target.value;ui.medFocus=state.medFocus;save();nextQ()};
 })();
 $('checkBtn').onclick=check;$('hintBtn').onclick=hint;$('showBtn').onclick=show;$('nextBtn').onclick=nextQ;
