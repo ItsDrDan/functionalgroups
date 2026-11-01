@@ -8,7 +8,7 @@
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:linear-gradient(120deg,#f1faf4 0%,#fffaf1 45%,#fdf1f1 100%);min-height:100vh;line-height:1.45}
-.app{max-width:1280px;margin:0 auto;padding:14px 14px 40px}
+.app{max-width:1120px;margin:0 auto;padding:14px 14px 40px}
 .hidden{display:none!important}
 button,select,input{font:inherit;color:inherit}
 .card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:0 6px 20px #26343c10;padding:18px}
@@ -38,8 +38,8 @@ details.directions .tip{margin:8px 18px 16px;background:#fff6d6;border-radius:12
 .mode-name{grid-area:n;font-weight:900;font-size:17px;line-height:1.2}
 .mode-btn small{grid-area:s;font-size:12px;color:#4c5a65;font-weight:600;margin-top:2px}
 .mode-btn[data-mode=spot]{--mb:#e7f6e9;--ma:#7caf86}.mode-btn[data-mode=classify]{--mb:#fff0dc;--ma:#d6ab66}.mode-btn[data-mode=name]{--mb:#e6f2ff;--ma:#82afd2}.mode-btn[data-mode=match]{--mb:#f0e8fc;--ma:#ad8cce}.mode-btn[data-mode=react]{--mb:#fde7e7;--ma:#d48a8a}.mode-btn[data-mode=props]{--mb:#e3f7f6;--ma:#6fb7b3}
-.main{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-areas:"card ref" "side ref" "vid ref";grid-template-rows:auto auto 1fr;gap:14px;align-items:start;margin-top:10px}
-#practice{grid-area:card}#journey{grid-area:side}#refDetails{grid-area:ref}#videoDetails{grid-area:vid}
+.main{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);grid-template-areas:"card card" "side vid";grid-template-rows:auto auto;gap:14px;align-items:start;margin-top:10px}
+#practice{grid-area:card;position:relative}#journey{grid-area:side}#videoDetails{grid-area:vid}
 .toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .mode-btn[data-mode=med]{--mb:#fdeaf3;--ma:#d68aae;grid-column:1/-1}
 .mode-btn .newtag{display:inline-block;margin-left:8px;background:#d9536f;color:#fff;font-size:11px;font-weight:900;padding:2px 8px;border-radius:99px;vertical-align:middle}
@@ -119,7 +119,7 @@ details.directions .tip{margin:8px 18px 16px;background:#fff6d6;border-radius:12
 .confetti{position:absolute;width:10px;height:14px;border-radius:2px;animation:fall 3s linear forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
 .source-note{margin-top:16px}
-@media(max-width:1000px){.main{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"card" "ref" "side" "vid"}#practice,#questionArea{min-width:0}.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1000px){.main{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;grid-template-areas:"card" "side" "vid"}#practice,#questionArea{min-width:0}.mode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){
  .app{padding:10px 10px 30px}
  .hero{padding:10px 14px}.hero .subtitle{display:none}.hero h1{font-size:24px}.hero-emoji{width:76px;height:84px}.badge{font-size:11px;padding:4px 8px}
@@ -258,6 +258,22 @@ body{font-weight:600}
 .ref-rules{display:grid;gap:8px;margin-top:12px}
 .rr{background:#fffaf0;border:1px solid #f0e2bd;border-radius:12px;padding:8px 11px;font-size:13.5px;line-height:1.4}.rr b{display:block;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:14.5px;margin-bottom:1px}
 @media(max-width:1000px) and (min-width:701px){.ref-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* v13: full-width questions, reference pop-out */
+.toprow{grid-template-columns:minmax(0,1fr) auto}
+.tr-btns{display:flex;gap:8px;align-items:center}
+.refbtn{border-radius:999px;background:#f3eefc;color:#3d2f6b;border:2px solid #cbb9ee;box-shadow:0 3px 0 #cbb9ee;min-height:44px;padding:8px 16px;white-space:nowrap}
+.refbtn:hover,.refbtn.on{background:#e9e0fb}.refbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #cbb9ee}
+.refpop{position:absolute;left:12px;right:12px;top:78px;z-index:30;background:#fffefa;border:2px solid #cbb9ee;border-radius:18px;box-shadow:0 18px 40px #26343c33;max-height:620px;overflow:auto;animation:rpin .18s ease-out}
+@keyframes rpin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.refpop{animation:none}}
+.rp-head{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:linear-gradient(120deg,#f6f1ff,#eef6ff);border-bottom:1px solid #e4dcf4}
+.rp-head b{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:19px}
+.rp-close{border:0;background:#fff;border-radius:50%;width:38px;height:38px;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 1px 4px #0002}
+.rp-body{padding:12px 14px 14px}
+.refpop .ref-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.refpop .ref-rules{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:860px){.refpop .ref-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.refpop{left:6px;right:6px;max-height:560px}.refpop .ref-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.refpop .ref-rules{grid-template-columns:1fr}.toprow{grid-template-columns:1fr;gap:8px}.tr-btns{display:grid;grid-template-columns:auto 1fr;gap:8px}.refbtn{padding:6px 14px;font-size:15px}#nextBtn{width:100%}}
 </style><script src="https://itsdrdan.github.io/games/track.js" defer></script>
 </head>
 <body>
@@ -278,7 +294,8 @@ body{font-weight:600}
 <nav class="mode-grid" id="modeGrid" aria-label="Choose a study mode"></nav>
 <div class="main">
 <section class="card" id="practice">
-<div class="toprow"><div class="tr-title"><h2 class="mode-title" id="modeTitle">Spot the Group</h2><p class="footer-note progress-note" id="progressLabel"></p></div><button class="action next" id="nextBtn" type="button">New Question ↻</button></div>
+<div class="toprow"><div class="tr-title"><h2 class="mode-title" id="modeTitle">Spot the Group</h2><p class="footer-note progress-note" id="progressLabel"></p></div><div class="tr-btns"><button class="action refbtn" id="refBtn" type="button" aria-expanded="false" aria-controls="refPop" title="Reference &amp; rules">🧠<span class="rb-txt"> Reference</span></button><button class="action next" id="nextBtn" type="button">New Question ↻</button></div></div>
+<div class="refpop hidden" id="refPop" role="dialog" aria-label="Reference and rules"><div class="rp-head"><b>🧠 Reference &amp; rules</b><button type="button" class="rp-close" id="refClose" aria-label="Close reference">✕</button></div><div class="rp-body" id="refBody"></div></div>
 <div class="statbar score"><span class="stat"><small>Correct</small><b id="correct">0</b></span><span class="stat"><small>Streak 🔥</small><b id="streak">0</b></span><span class="stat"><small>Assisted</small><b id="assisted">0</b></span></div>
 <div class="controls">
 <div class="focus-row hidden" id="medRow"><label for="medSel">Focus</label><select id="medSel"><option value="all">All fields</option><option value="nursing">🩺 Nursing &amp; pharmacology</option><option value="dental">🦷 Dental hygiene &amp; dentistry</option><option value="resp">🫁 Respiratory &amp; anesthesia</option><option value="imaging">🩻 Radiology &amp; imaging</option><option value="body">🫀 Anatomy &amp; physiology</option><option value="benzene">⬡ Benzene family (phenol, toluene, anisole…)</option><option value="metab">🔄 Metabolism (glycolysis, Krebs cycle, ketones…)</option></select></div>
@@ -289,7 +306,6 @@ body{font-weight:600}
 <div class="btn-row" id="btnRow"><button class="action primary" id="checkBtn">Check Answer</button><button class="action secondary" id="hintBtn">Hint</button><button class="action secondary" id="showBtn">Show Answer</button></div>
 <div class="hintbox" id="hintBox"></div><div class="feedback" id="feedback" role="status" aria-live="polite"></div>
 </section>
-<details class="card collapsible" id="refDetails"><summary>🧠 Reference &amp; rules</summary><div class="body" id="refBody"></div></details>
 <details class="card journey" id="journey"><summary>🧭 Chemistry Journey <span class="journey-chip" id="jChip">Level 1 • 0 XP</span></summary><div class="body">
 <div class="xp-row"><span id="xpLevel">Level 1</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div><span id="xpText">0 / 100 XP</span></div>
 <p class="xp-note">Earn 10 XP for each independent answer (+2 per streak step, up to +10) and 2 XP for a reveal. Saved in this browser only.</p>
@@ -847,7 +863,7 @@ function buildModes(){$('modeGrid').innerHTML=MODES.map(m=>`<button class="mode-
  $('modeGrid').querySelectorAll('button').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;buildModes();nextQ();if(matchMedia('(max-width:700px)').matches)requestAnimationFrame(()=>requestAnimationFrame(()=>{const c=$('practice');window.scrollTo({top:Math.max(0,scrollY+c.getBoundingClientRect().top-8),behavior:'smooth'})}))})}
 function fb(kind,html){const f=$('feedback');f.className='feedback '+kind;f.innerHTML=html}
 function nextQ(){if(state.mode!=='blitz'&&BLITZ.on)blitzStop();$('practice').dataset.mode=state.mode;
- const bz=state.mode==='blitz';['btnRow','hintBox','feedback'].forEach(id=>$(id).classList.toggle('hidden',bz));$('nextBtn').classList.toggle('hidden',bz);$('levelRow').classList.toggle('hidden',!['name','match'].includes(state.mode));
+ const bz=state.mode==='blitz';$('refBtn').classList.toggle('hidden',bz);$('refPop').classList.add('hidden');['btnRow','hintBox','feedback'].forEach(id=>$(id).classList.toggle('hidden',bz));$('nextBtn').classList.toggle('hidden',bz);$('levelRow').classList.toggle('hidden',!['name','match'].includes(state.mode));
  if(bz){$('modeTitle').textContent='⚡ Blitz';$('styleRow').classList.add('hidden');$('medRow').classList.add('hidden');$('progressLabel').textContent='60 seconds • mixed questions • tap to answer';blitzEnter();return}
  let q;try{q=GEN[state.mode]()}catch(e){console.error(e);q=GEN[state.mode]()}mascot('normal');state.q=q;state.selected=null;state.done=false;state.revealed=false;$('hintBox').className='hintbox';$('hintBox').textContent='';fb('','');
  $('modeTitle').textContent=MODES.find(m=>m.id===state.mode).title;$('styleRow').classList.toggle('hidden',!['spot','classify','name','props'].includes(state.mode));$('medRow').classList.toggle('hidden',state.mode!=='med');
@@ -936,11 +952,15 @@ function renderRef(){$('refBody').innerHTML=`<p class="ref-key"><b>R</b> = any c
 
 (function(){const KEY='itsdrdan-groups-ui-v2',phone=()=>matchMedia('(max-width:700px)').matches;let ui={};try{ui=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}
  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ui))}catch{}};
- [['howTo',false],['refDetails','desk'],['journey',true],['videoDetails',false]].forEach(([id,def])=>{const el=$(id);const st=ui[id];el.open=st!==undefined?st:(def==='desk'?!phone():def);el.addEventListener('toggle',()=>{ui[id]=el.open;save()})});
+ [['howTo',false],['journey',true],['videoDetails',false]].forEach(([id,def])=>{const el=$(id);const st=ui[id];el.open=st!==undefined?st:(def==='desk'?!phone():def);el.addEventListener('toggle',()=>{ui[id]=el.open;save()})});
  if(ui.style&&['mixed','skeletal','condensed','cond2d'].includes(ui.style))state.style=ui.style;$('styleSel').value=state.style;$('styleSel').onchange=e=>{state.style=e.target.value;ui.style=state.style;save();nextQ()};
  if(['basic','mixed','challenge'].includes(ui.level))state.level=ui.level;const lvSet=()=>document.querySelectorAll('#levelRow [data-lv]').forEach(b=>{const on=b.dataset.lv===state.level;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});lvSet();document.querySelectorAll('#levelRow [data-lv]').forEach(b=>b.onclick=()=>{state.level=b.dataset.lv;ui.level=state.level;save();lvSet();nextQ()});
  if(ui.medFocus&&MEDLIB.some(m=>ui.medFocus==='all'||m.tags.includes(ui.medFocus)))state.medFocus=ui.medFocus;$('medSel').value=state.medFocus;$('medSel').onchange=e=>{state.medFocus=e.target.value;ui.medFocus=state.medFocus;save();nextQ()};
 })();
+{const pop=$('refPop'),btn=$('refBtn');const setRef=o=>{pop.classList.toggle('hidden',!o);btn.setAttribute('aria-expanded',o);btn.classList.toggle('on',o);if(o){const pr=$('practice').getBoundingClientRect(),br=btn.getBoundingClientRect();pop.style.top=Math.round(br.bottom-pr.top+8)+'px';mascot('wow',1500);pop.scrollTop=0}};
+ btn.onclick=e=>{e.stopPropagation();setRef(pop.classList.contains('hidden'))};$('refClose').onclick=()=>setRef(false);
+ document.addEventListener('click',e=>{if(!pop.classList.contains('hidden')&&!pop.contains(e.target)&&e.target!==btn)setRef(false)});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')setRef(false)});}
 $('checkBtn').onclick=check;$('hintBtn').onclick=hint;$('showBtn').onclick=show;$('nextBtn').onclick=nextQ;
 $('questionArea').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('option')){}});
 {const rb=$('journeyReset');let armed=0;rb.onclick=()=>{if(!armed){armed=setTimeout(()=>{armed=0;rb.textContent='Reset progress'},4000);rb.textContent='Tap again to confirm reset';return}clearTimeout(armed);armed=0;rb.textContent='Reset progress';journey=jBlank();jSave();renderJourney()}}
