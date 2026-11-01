@@ -2,7 +2,7 @@
   "title": "Organic Origins (Hydrocarbons to Amides)",
   "author": "Dr. Dan (ItsDrDan)",
   "course": "CHEM 3B",
-  "description": "The starting point for CHEM 3B organic chemistry: spot, name, and draw organic compounds, then predict how they react. Six modes: Spot the Group, 1°/2°/3° classification, Name It, Draw It, Predict the Product, and Properties. Covers the CHEM 3B organic chapters from hydrocarbons through amides, with skeletal, condensed, or mixed structure styles. Includes hints, answer reveals, XP, streaks, achievement badges, and a Dr. Dan CHEM 3B video playlist.",
+  "description": "The starting point for CHEM 3B organic chemistry: spot, name, and draw organic compounds, then predict how they react. Seven modes: Spot the Group, 1°/2°/3° classification, Name It, Draw It, Predict the Product, Properties, and Med Molecules (spot labeled groups in 103 real drugs, biomolecules and benzene derivatives, with nursing, dental, anesthesia, imaging and A&P fun facts). Covers the CHEM 3B organic chapters from hydrocarbons through amides, with skeletal, condensed, or mixed structure styles. Includes hints, answer reveals, XP, streaks, achievement badges, and a Dr. Dan CHEM 3B video playlist.",
   "icon": "🧪",
   "tags": [
     "chemistry",
@@ -17,8 +17,13 @@
     "skeletal structures",
     "condensed structures",
     "physical properties",
-    "organic reactions"
+    "organic reactions",
+    "pharmaceuticals",
+    "biomolecules",
+    "nursing",
+    "dental hygiene",
+    "benzene derivatives"
   ],
-  "version": "5",
+  "version": "7",
   "status": "working"
 }
