@@ -734,7 +734,62 @@ const RX=(spec)=>({mol:bd(spec),spec});
 const NO={t:'No reaction'};
 function uniqOpts(correct,wrongs,fill){const seen=new Set([partKey(correct)]),out=[];for(const w of wrongs){const k=partKey(w);if(!seen.has(k)){seen.add(k);out.push(w);if(out.length===3)break}}for(const w of fill||[]){if(out.length>=3)break;const k=partKey(w);if(!seen.has(k)){seen.add(k);out.push(w)}}return out}
 const H2O={t:'H₂O'};
-function genReact(){const k=reactBag();let react,arrow,correct,wrongs,why,hint,title,fill=[[NO],[{mol:bd({f:'alkane',n:3})}]];
+/* ===== Predict the Product with branched molecules (uses the verified branched namer) ===== */
+function brMirror(s){const m=JSON.parse(JSON.stringify(s)),n=m.n;m.subs.forEach(x=>x.i=n-1-x.i);if(m.pg!=null)m.pg=n-1-m.pg;if(m.mb)m.mb.i=n-2-m.mb.i;return m}
+const brCopy=(s,ch)=>Object.assign(JSON.parse(JSON.stringify(s)),ch||{});
+const hasHal=s=>s.subs.some(x=>HALSUB[x.t]);
+const satK=s=>hasHal(s)?'halide':'alkane';
+function brTry(fn){for(let i=0;i<80;i++){const r=fn();if(r)return r}return null}
+function brAlcohol(kind){return brTry(()=>{let a=R.br('alcohol');if(kind===1){if(a.pg!==0&&a.pg!==a.n-1)return null;if(a.pg===0)a=brMirror(a)}
+  else{const deg=FAM.br.cls(a);if(deg!==kind)return null}
+  if(kind!==3&&a.subs.some(x=>x.i===a.pg))return null;return a})}
+function genReactBr(k){const mk=s=>({mol:bd(s)});const V=s=>s&&brValid(s);const mut=(s,c)=>{const o=[];for(let g=0;g<40&&o.length<c;g++){const m=brMutate(s);if(m&&brName(m)!==brName(s))o.push(m)}return o};
+ let react,arrow,correct,wrongs=[],why,hint,title;
+ if(k==='ox1ald'||k==='ox1acid'){const a=brAlcohol(1);if(!a)return null;const ald=brCopy(a,{k:'aldehyde',pg:a.n-1}),acid=brCopy(a,{k:'acid',pg:a.n-1});if(!V(ald)||!V(acid))return null;
+  react=[mk(a)];const toAcid=k==='ox1acid';arrow=toAcid?'excess [O]<small>strong oxidizing agent</small>':'[O]<small>first oxidation product</small>';const P=toAcid?acid:ald;correct=[mk(P)];
+  wrongs=[[mk(toAcid?ald:acid)],[NO],...mut(P,3).map(x=>[mk(x)])];
+  why=`${nm(a)} is a primary (1°) alcohol, so ${toAcid?'excess [O] takes it all the way to the carboxylic acid':'the first oxidation product is the aldehyde'}: <b>${nm(P)}</b>. Only the –CH₂OH carbon changes; the branches come along unchanged.`;
+  hint='Find the carbon holding –OH. Only that carbon reacts; every branch stays exactly where it was.';title=toAcid?'Complete oxidation of a primary alcohol':'Oxidation of a primary alcohol'}
+ else if(k==='ox2'){const a=brAlcohol(2);if(!a)return null;const kt=brCopy(a,{k:'ketone'});if(!V(kt))return null;react=[mk(a)];arrow='[O]';correct=[mk(kt)];
+  const sat=brCopy(a,{k:satK(a),pg:null});wrongs=[[NO],...mut(kt,3).map(x=>[mk(x)])];if(V(sat))wrongs.push([mk(sat)]);
+  why=`${nm(a)} is a secondary (2°) alcohol: the –OH carbon has one H. Oxidation turns it into a C=O, giving the ketone <b>${nm(kt)}</b>. The branches don't move.`;
+  hint='A 2° alcohol becomes a ketone at the same carbon. Keep every branch where it was.';title='Oxidation of a secondary alcohol'}
+ else if(k==='ox3'){const a=brAlcohol(3);if(!a)return null;react=[mk(a)];arrow='[O]';correct=[NO];
+  const sh=brTry(()=>{const m=brCopy(a,{k:'ketone',pg:a.pg+(Math.random()<.5?1:-1)});m.subs=m.subs.filter(x=>!(x.i===a.pg&&ALKSUB[x.t]));return V(m)?m:null});
+  const sat=brCopy(a,{k:satK(a),pg:null});wrongs=[];if(sh)wrongs.push([mk(sh)]);if(V(sat))wrongs.push([mk(sat)]);mut(a,2).forEach(x=>wrongs.push([mk(x)]));
+  why=`${nm(a)} is a tertiary (3°) alcohol: the carbon holding –OH is bonded to three other carbons and has no H to lose, so [O] does not react.`;
+  hint='Count the carbons attached to the –OH carbon. If there are three, there is no H to remove.';title='Oxidation of a tertiary alcohol'}
+ else if(k==='hydrogenation'){const al=brTry(()=>{const s=R.br('alkene');const p=brCopy(s,{k:satK(s),mb:null});return V(p)?s:null});if(!al)return null;const p=brCopy(al,{k:satK(al),mb:null});
+  react=[mk(al),{t:'H₂'}];arrow='Ni or Pt';correct=[mk(p)];const yne=brCopy(al,{k:'alkyne',mb:{i:al.mb.i,o:3}});wrongs=[[NO],...mut(p,3).map(x=>[mk(x)])];if(V(yne))wrongs.push([mk(yne)]);
+  why=`H₂ adds across the C=C (one H to each carbon), so ${nm(al)} becomes <b>${nm(p)}</b>. Note the name can change: without the double bond, the chain is numbered to give the branches the lowest numbers.`;
+  hint='H₂ just turns the C=C into C–C. Then rename: number the chain to give the branches the lowest numbers.';title='Hydrogenation of an alkene'}
+ else if(k==='reduction'){const ald=Math.random()<.5;const s0=R.br(ald?'aldehyde':'ketone');const pr=brCopy(s0,{k:'alcohol'});if(!V(pr))return null;
+  react=[mk(s0),{t:'H₂'}];arrow='Ni';correct=[mk(pr)];const acid=brCopy(s0,{k:'acid'});const sat=brCopy(s0,{k:satK(s0),pg:null});wrongs=[[NO],...mut(pr,3).map(x=>[mk(x)])];if(ald&&V(acid))wrongs.push([mk(acid)]);if(V(sat))wrongs.push([mk(sat)]);
+  why=`H₂ adds across the C=O, turning it into C–OH: ${ald?'an aldehyde gives a primary (1°) alcohol':'a ketone gives a secondary (2°) alcohol'}. Product: <b>${nm(pr)}</b>.`;
+  hint='Reduction is the reverse of oxidation: the C=O becomes C–OH at the same carbon.';title=ald?'Reduction of an aldehyde':'Reduction of a ketone'}
+ else if(k==='ester'||k==='hydrolysis'){const ac=brTry(()=>{const s=R.br('acid',{alkylOnly:true});return s.n<=7?s:null});if(!ac)return null;const b=rnd(1,3);const es=brCopy(ac,{k:'ester',b});const alc={f:'alcohol',n:b,p:1};if(!V(es))return null;
+  if(k==='ester'){react=[mk(ac),mk(alc)];arrow='H⁺<small>heat</small>';correct=[mk(es),H2O];const es2=brCopy(es,{b:b===3?2:b+1});wrongs=[[mk(es2),H2O],[NO],...mut(es,3).map(x=>[mk(x),H2O])];
+   why=`Esterification: acid + alcohol → ester + water. The alcohol's ${ALK(b)} group goes on the O, and the acid's branched chain becomes the "-oate" part: <b>${nm(es)}</b>.`;hint='The acid keeps all its branches. Swap its –OH for –O–(alkyl group from the alcohol) and lose H₂O.';title='Esterification'}
+  else{react=[mk(es),H2O];arrow='H⁺<small>heat</small>';correct=[mk(ac),mk(alc)];const ald=brCopy(ac,{k:'aldehyde'});wrongs=[[mk(ac),mk({f:'alcohol',n:b===3?2:b+1,p:1})],...mut(ac,3).map(x=>[mk(x),mk(alc)])];if(V(ald))wrongs.push([mk(ald),mk(alc)]);
+   why=`Hydrolysis splits the ester at the C–O single bond next to C=O: ${nm(es)} → <b>${nm(ac)}</b> + <b>${nm(alc)}</b>. The branches stay on the acid part.`;hint='Cut between the C=O carbon and the O–alkyl. The C=O side becomes the acid (with its branches); the alkyl side becomes the alcohol.';title='Hydrolysis of an ester'}}
+ else if(k==='amide'){const ac=R.br('acid',{alkylOnly:true});const am=brCopy(ac,{k:'amide'});if(!V(am))return null;react=[mk(ac),{t:'NH₃'}];arrow='heat';correct=[mk(am),H2O];
+  const es=brCopy(ac,{k:'ester',b:1});const amn=brCopy(ac,{k:'amine'});wrongs=[[NO],...mut(am,2).map(x=>[mk(x),H2O])];if(V(es))wrongs.push([mk(es),H2O]);if(V(amn))wrongs.push([mk(amn),H2O]);
+  why=`An acid and ammonia form an amide plus water: the –OH is replaced by –NH₂ on the C=O carbon. Product: <b>${nm(am)}</b>.`;hint='The acid loses –OH, NH₃ loses an H, and the new C–N bond makes an amide. Branches stay put.';title='Amide formation'}
+ else if(k==='neutral'){const ac=R.br('acid',{alkylOnly:true});const m=brBuild(ac);m.chain[m.chain.length-1]=nd('O','O−','O⁻',{smi:'[O-]'});react=[mk(ac),{t:'NaOH'}];arrow='';correct=[{mol:m},{t:'Na⁺'},H2O];
+  const es=brCopy(ac,{k:'ester',b:1});const al=brCopy(ac,{k:'alcohol'});wrongs=[[NO]];if(V(es))wrongs.push([mk(es),H2O]);if(V(al))wrongs.push([mk(al),H2O]);mut(ac,2).forEach(x=>{const mm=brBuild(x);mm.chain[mm.chain.length-1]=nd('O','O−','O⁻',{smi:'[O-]'});wrongs.push([{mol:mm},{t:'Na⁺'},H2O])});
+  why=`NaOH removes the acidic H from –COOH, giving the salt <b>sodium ${nm(ac).replace(/oic acid$/,'oate')}</b> and water. The carbon chain and branches don't change.`;hint='Only the O–H of –COOH reacts with a base. Everything else stays the same.';title='Neutralizing a carboxylic acid'}
+ else if(k==='amineHCl'){const a=brTry(()=>{const s=R.br('amine',{alkylOnly:true});return s.subs.some(x=>x.i===s.pg)?null:s});if(!a)return null;const m=brBuild(a);
+  const ni=m.chain.findIndex(n=>n.el==='N');if(ni>=0)m.chain[ni]=nd('N','NH3+','NH₃⁺',{smi:'[NH3+]'});else{const ci=m.chain.findIndex(n=>(n.subs||[]).some(sb=>sb.node.el==='N'));const sb=m.chain[ci].subs.find(sb=>sb.node.el==='N');sb.node=nd('N','NH3+','NH₃⁺',{smi:'[NH3+]'})}
+  react=[mk(a),{t:'HCl'}];arrow='';correct=[{mol:m},{t:'Cl⁻'}];const hal=brCopy(a,{k:'halide',pg:null,subs:[...a.subs,{i:a.pg,t:'Cl'}]});const alc=brCopy(a,{k:'alcohol'});
+  wrongs=[[NO]];if(V(hal))wrongs.push([mk(hal),{t:'NH₃'}]);if(V(alc))wrongs.push([mk(alc),{t:'HCl'}]);mut(a,2).forEach(x=>{const mm=brBuild(x);const j=mm.chain.findIndex(n=>n.el==='N');if(j>=0){mm.chain[j]=nd('N','NH3+','NH₃⁺',{smi:'[NH3+]'});wrongs.push([{mol:mm},{t:'Cl⁻'}])}});
+  why=`${nm(a)} is a base: the lone pair on N picks up H⁺ from HCl, making an ammonium ion (–NH₃⁺) with Cl⁻. The carbon skeleton is unchanged.`;hint='Amines are bases. Only the N changes: –NH₂ becomes –NH₃⁺.';title='Amine plus acid'}
+ else return null;
+ if(!react||!correct)return null;
+ const wr=uniqOpts(correct,wrongs,[[NO],[mk(R.br('alkane'))]]);if(wr.length<3)return null;
+ const options=shuf([correct,...wr]).map(p=>({key:partKey(p),html:partsHTML(p),struct:true}));
+ return {kind:'react',branched:true,rx:{react:react.map(p=>p.mol?smiles(p.mol):p.t),correct:correct.map(p=>p.mol?smiles(p.mol):p.t),title},html:`<p class="prompt">${title}: predict the major product.</p><div class="rxn">${partsHTML(react,1)}<span class="rarrow"><span class="rlab">${arrow}</span><span class="rg">→</span></span><span class="qmark">?</span></div>`,options,answer:partKey(correct),hint,why,cols:2,struct:true}}
+
+function genReact(){const k=reactBag();if(k!=='hydration'&&Math.random()<.6){let q=null;try{q=genReactBr(k)}catch(e){console.error(e)}if(q)return q}let react,arrow,correct,wrongs,why,hint,title,fill=[[NO],[{mol:bd({f:'alkane',n:3})}]];
  const mk=s=>({mol:bd(s)});
  if(k==='ox1ald'){const n=rnd(2,5),a={f:'alcohol',n,p:1};react=[mk(a)];arrow='[O]<small>first oxidation product</small>';correct=[mk({f:'aldehyde',n})];wrongs=[[mk({f:'acid',n})],n>=3?[mk({f:'ketone',n,p:2})]:[mk({f:'alkene',n,p:1})],[NO],[mk({f:'alkene',n,p:1})]];why=`A primary (1°) alcohol is oxidized first to an aldehyde: ${nm(a)} → ${nm({f:'aldehyde',n})}. (More [O] would continue to the carboxylic acid.)`;hint='Primary alcohols oxidize to aldehydes first. The –CH₂OH carbon becomes –CHO.';title='Oxidation of a primary alcohol'}
  else if(k==='ox1acid'){const n=rnd(2,5),a={f:'alcohol',n,p:1};react=[mk(a)];arrow='excess [O]<small>strong oxidizing agent</small>';correct=[mk({f:'acid',n})];wrongs=[[mk({f:'aldehyde',n})],[mk({f:'ester',a:n,b:1})],[NO],[mk({f:'alkene',n,p:1})]];why=`With excess oxidizing agent a primary alcohol is oxidized all the way: alcohol → aldehyde → carboxylic acid. Product: ${nm({f:'acid',n})}.`;hint='With an excess of [O], the aldehyde formed is oxidized further to a carboxylic acid.';title='Complete oxidation of a primary alcohol'}
