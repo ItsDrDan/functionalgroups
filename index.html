@@ -357,7 +357,7 @@ function flipMol(m){return {chain:m.chain.slice().reverse(),bonds:m.bonds.slice(
 function layout(m){const n=m.chain.length,pos=[{x:0,y:0}],ang=[];let t=-60;
  if(n>1){ang[0]=30;for(let k=1;k<n-1;k++){const lin=m.bonds[k-1]===3||m.bonds[k]===3;if(lin)ang[k]=ang[k-1];else{ang[k]=ang[k-1]+t;t=-t}}
   for(let i=0;i<n-1;i++)pos.push({x:pos[i].x+BL*cos(ang[i]),y:pos[i].y+BL*sin(ang[i])})}
- const lay={pos,ang,t,subs:[],tails:[],ring:null};
+ const lay={pos,ang,t,subs:[],tails:[],ring:null};const pend=[];
  for(let k=0;k<n;k++){const node=m.chain[k],ss=node.subs||[];if(!ss.length)continue;
   let out;const prev=k>0?pos[k-1]:null,next=k<n-1?pos[k+1]:null;
   const u=(a,b)=>{const dx=a.x-b.x,dy=a.y-b.y,l=Math.hypot(dx,dy);return {x:dx/l,y:dy/l}};
@@ -366,9 +366,14 @@ function layout(m){const n=m.chain.length,pos=[{x:0,y:0}],ang=[];let t=-60;
   else if(prev){const a0=Math.atan2(pos[k].y-prev.y,pos[k].x-prev.x)/deg;const c1=a0+60,c2=a0-60;out=sin(c1)<sin(c2)?c1:c2}
   else out=-90;
   const dirs=ss.length===1?[out]:[out-40,out+40];
-  ss.forEach((s,j)=>{const sx=pos[k].x+BL*cos(dirs[j]),sy=pos[k].y+BL*sin(dirs[j]);lay.subs.push({k,s,x:sx,y:sy,dir:dirs[j]});
-   const tl=s.node.tail;if(tl){const sg=ss.length===1?(sin(dirs[j])<0?1:-1):(dirs[j]<out?-1:1);const ang=tl==='et'?[dirs[j]+60*sg]:tl==='ipr'?[dirs[j]+60,dirs[j]-60]:[dirs[j],dirs[j]+90,dirs[j]-90];
-    ang.forEach(a=>lay.tails.push({x1:sx,y1:sy,x2:sx+BL*cos(a),y2:sy+BL*sin(a)}))}})}
+  const ears=ss.map((s,j)=>({x:pos[k].x+BL*cos(dirs[j]),y:pos[k].y+BL*sin(dirs[j])}));
+  ss.forEach((s,j)=>{const sx=ears[j].x,sy=ears[j].y;lay.subs.push({k,s,x:sx,y:sy,dir:dirs[j]});
+   const tl=s.node.tail;if(tl)pend.push(()=>{const build=sg=>{const nodes=[];(TAILS[tl]||[]).forEach(([f,t])=>{const P=f<0?{x:sx,y:sy,d:dirs[j]}:nodes[f];const d=P.d+t*sg;nodes.push({x:P.x+BL*cos(d),y:P.y+BL*sin(d),d,px:P.x,py:P.y})});return nodes};
+    const others=[...pos,...ears.filter((_,q)=>q!==j),...lay.subs.filter(u=>u.k!==k||u.x!==sx),...lay.tails.map(t=>({x:t.x2,y:t.y2})),...lay.tails.map(t=>({x:(t.x1+t.x2)/2,y:(t.y1+t.y2)/2}))];
+    const score=ns=>{let mn=1e9;ns.forEach(q=>others.forEach(o=>{const dd=Math.hypot(q.x-o.x,q.y-o.y);if(dd<mn)mn=dd}));return mn};
+    const pref=ss.length===1?(sin(dirs[j])<0?1:-1):(dirs[j]<out?-1:1);const A=build(pref),B=build(-pref);const nodes=score(B)>score(A)+4?B:A;
+    nodes.forEach(q=>lay.tails.push({x1:q.px,y1:q.py,x2:q.x,y2:q.y}))})})}
+ pend.forEach(f=>f());
  if(m.chain[0].ring){lay.ring={cx:-BL*cos(30),cy:-BL*sin(30)}}
  return lay}
 
@@ -399,6 +404,10 @@ function c2NodeText(m,n,i){const ord=()=>{let v=0;if(i>0)v+=m.bonds[i-1];if(i<m.
 /* a substituent as a vertical stack of text levels; side groups hang off a level horizontally */
 function c2SubBlock(sb){const nn=sb.node;
  if(nn.tail==='et')return {levels:['CH2','CH3'],side:null,b:sb.b,el:'C'};
+ if(nn.tail==='pr')return {levels:['CH2','CH2','CH3'],side:null,b:sb.b,el:'C'};
+ if(nn.tail==='bu')return {levels:['CH2','CH2','CH2','CH3'],side:null,b:sb.b,el:'C'};
+ if(nn.tail==='sbu')return {levels:['CH','CH2','CH3'],side:{lvl:0,r:'CH3'},b:sb.b,el:'C'};
+ if(nn.tail==='ibu')return {levels:['CH2','CH','CH3'],side:{lvl:1,r:'CH3'},b:sb.b,el:'C'};
  if(nn.tail==='ipr')return {levels:['CH','CH3'],side:{lvl:0,r:'CH3'},b:sb.b,el:'C'};
  if(nn.tail==='tbu')return {levels:['C','CH3'],side:{lvl:0,r:'CH3',l:'H3C'},b:sb.b,el:'C'};
  const t=nn.el==='C'?(nn.cond||'CH3'):(nn.cond||nn.draw||nn.el);return {levels:[t],side:null,b:sb.b,el:nn.el}}
@@ -412,9 +421,13 @@ function condensed2D(m,opt){opt=opt||{};const S='#2d3f4b',GAP=22,LV=46;const col
  // widths: slot must fit the token and any hanging block
  let x=0;const out=[];let svg='',minY=-16,maxY=16;
  const blockW=b=>Math.max(...b.levels.map(c2Width))+(b.side?((b.side.r?c2Width(b.side.r)+GAP:0)+(b.side.l?c2Width(b.side.l)+GAP:0)):0);
+ const ext=b=>{let L=0,Rr=0;b.levels.forEach((t,lv)=>{const sl=/^(Cl|Br)/.test(t)?2:1,sw=c2Width(t.slice(0,sl))/2,tw=c2Width(t);let l=sw,r=tw-sw;if(b.side&&b.side.lvl===lv){if(b.side.r)r+=GAP+c2Width(b.side.r);if(b.side.l)l+=GAP+c2Width(b.side.l)}L=Math.max(L,l);Rr=Math.max(Rr,r)});return [L,Rr]};
+ let tokEnd=null;const bR={'-1':-1e9,'1':-1e9};
  nodes.forEach((o,i)=>{const w=c2Width(o.t);const anchorOff=o.t.startsWith('H')&&o.t.length>1&&i===0?w-C2W(o.t[o.t.length-1])/2:C2W(o.t[0])/2;
-  let need=w;o.blocks.forEach(b=>{need=Math.max(need,anchorOff+blockW(b)/2+6)});
-  o.x=x;o.w=w;o.ax=x+anchorOff;out.push(o);x+=need+GAP});
+  let L=0,Rr=0;let xx=tokEnd===null?0:tokEnd+GAP;
+  o.blocks.forEach(b=>{const [l,r]=ext(b);L=Math.max(L,l);Rr=Math.max(Rr,r);xx=Math.max(xx,bR[b.dir]+12-(anchorOff-l))});
+  o.x=xx;o.w=w;o.ax=xx+anchorOff;o.L=L;o.R=Rr;out.push(o);tokEnd=xx+w;
+  o.blocks.forEach(b=>{bR[b.dir]=o.ax+ext(b)[1]});x=tokEnd+GAP});
  const hline=(x1,x2,y,ord)=>{const offs=ord===1?[0]:ord===2?[-3,3]:[-4.5,0,4.5];return offs.map(d=>`<line x1="${x1.toFixed(1)}" y1="${(y+d).toFixed(1)}" x2="${x2.toFixed(1)}" y2="${(y+d).toFixed(1)}" stroke="${S}" stroke-width="2"/>`).join('')};
  const vline=(xx,y1,y2,ord)=>{const offs=ord===1?[0]:ord===2?[-3,3]:[-4.5,0,4.5];return offs.map(d=>`<line x1="${(xx+d).toFixed(1)}" y1="${y1.toFixed(1)}" x2="${(xx+d).toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${S}" stroke-width="2"/>`).join('')};
  out.forEach((o,i)=>{svg+=c2Text(o.t,o.x,0,col(o.n.el));
@@ -423,7 +436,7 @@ function condensed2D(m,opt){opt=opt||{};const S='#2d3f4b',GAP=22,LV=46;const col
     const yy=y+b.dir*LV;svg+=vline(o.ax,y1,y2,lv===0?b.b:1);const tw=c2Width(t),sl=/^(Cl|Br)/.test(t)?2:1,tx=o.ax-c2Width(t.slice(0,sl))/2;svg+=c2Text(t,tx,yy,col(lv===0?b.el:'C'));
     if(b.side&&b.side.lvl===lv){if(b.side.r){svg+=hline(tx+tw+4,tx+tw+GAP-4,yy,1);svg+=c2Text(b.side.r,tx+tw+GAP,yy,S)}if(b.side.l){const lw=c2Width(b.side.l);svg+=hline(tx-GAP+4,tx-4,yy,1);svg+=c2Text(b.side.l,tx-GAP-lw,yy,S)}}
     y=yy;minY=Math.min(minY,yy-16);maxY=Math.max(maxY,yy+16)})})});
- let minX=0,maxX=x-GAP;out.forEach(o=>o.blocks.forEach(b=>{const half=blockW(b);minX=Math.min(minX,o.ax-half);maxX=Math.max(maxX,o.ax+half)}));
+ let minX=0,maxX=x-GAP;out.forEach(o=>{if(o.blocks.length){minX=Math.min(minX,o.ax-o.L);maxX=Math.max(maxX,o.ax+o.R)}});
  const pad=12,vx=minX-pad,vy=minY-pad,w=maxX-minX+2*pad,h=maxY-minY+2*pad,sc=opt.scale||1;
  return `<svg class="mol cond2d" viewBox="${vx.toFixed(0)} ${vy.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="Condensed structure with branches drawn" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`}
 
@@ -563,11 +576,17 @@ const partKey=parts=>parts.map(p=>p.mol?smiles(p.mol):p.t).join('|');
 const sp=(s)=>({mol:bd(s),spec:s});
 
 /* ===== Branched compounds: build, IUPAC name, challenge problems ===== */
-const STX=['','meth','eth','prop','but','pent','hex','hept','oct'];
-const ALKSUB={me:{name:'methyl',L:1,cond:'CH3',smi:'C',tail:null},et:{name:'ethyl',L:2,cond:'CH2CH3',smi:'CC',tail:'et'},ipr:{name:'isopropyl',L:2,cond:'CH(CH3)2',smi:'C(C)C',tail:'ipr'},tbu:{name:'tert-butyl',L:2,cond:'C(CH3)3',smi:'C(C)(C)C',tail:'tbu'}};
+const STX=['','meth','eth','prop','but','pent','hex','hept','oct','non','dec'];
+const ALKSUB={me:{name:'methyl',L:1,cond:'CH3',smi:'C',tail:null},et:{name:'ethyl',L:2,cond:'CH2CH3',smi:'CC',tail:'et'},pr:{name:'propyl',L:3,cond:'CH2CH2CH3',smi:'CCC',tail:'pr'},bu:{name:'butyl',L:4,cond:'CH2CH2CH2CH3',smi:'CCCC',tail:'bu'},
+ ipr:{name:'isopropyl',L:2,cond:'CH(CH3)2',smi:'C(C)C',tail:'ipr'},sbu:{name:'sec-butyl',L:3,cond:'CH(CH3)CH2CH3',smi:'C(C)CC',tail:'sbu'},ibu:{name:'isobutyl',L:3,cond:'CH2CH(CH3)2',smi:'CC(C)C',tail:'ibu'},tbu:{name:'tert-butyl',L:2,cond:'C(CH3)3',smi:'C(C)(C)C',tail:'tbu'}};
+/* branch drawing templates: [parent (-1 = attachment carbon), turn in degrees].
+   Branch-point CH (isopropyl, sec-butyl, isobutyl): three bonds 120° apart (trigonal look).
+   tert-butyl C: one methyl in plane 109.5° from the chain bond, the other two splayed close together on the opposite side (tetrahedral look, no wedges). */
+const TAILS={et:[[-1,60]],pr:[[-1,60],[0,-60]],bu:[[-1,60],[0,-60],[1,60]],ipr:[[-1,60],[-1,-60]],sbu:[[-1,60],[-1,-60],[1,60]],ibu:[[-1,60],[0,-60],[0,60]],tbu:[[-1,70.5],[-1,-35],[-1,-75]]};
+const STRAIGHT={me:1,et:1,pr:1,bu:1};
 const HALSUB={Cl:'chloro',Br:'bromo',F:'fluoro',I:'iodo'};
 const subName=t=>ALKSUB[t]?ALKSUB[t].name:HALSUB[t];
-const akey=nmx=>nmx.replace(/^tert-/,'');
+const akey=nmx=>nmx.replace(/^(tert|sec)-/,'');
 const MULT=['','','di','tri','tetra'];
 const TERMPG={aldehyde:1,acid:1,ester:1,amide:1};
 const BRGRP={alkane:'alkane',alkene:'alkene',alkyne:'alkyne',halide:'halide',alcohol:'alcohol',aldehyde:'aldehyde',ketone:'ketone',acid:'acid',ester:'ester',amine:'amine',amide:'amide'};
@@ -581,7 +600,7 @@ function brBuild(s){const n=s.n,C=Cs(n),pre=[],post=[];const k=s.k;
  const chain=[...pre,...C,...post];const bonds=Array(chain.length-1).fill(1);if(s.mb)bonds[pre.length+s.mb.i]=s.mb.o;
  return {chain,bonds}}
 /* valence/chain-choice validity */
-function brValid(s){const n=s.n,k=s.k;if(n<3||n>8)return false;
+function brValid(s){const n=s.n,k=s.k;if(n<3||n>10)return false;
  const used=Array(n).fill(0);for(let i=0;i<n;i++)used[i]=(i>0?1:0)+(i<n-1?1:0);
  if(s.mb){if(s.mb.i<0||s.mb.i>n-2)return false;used[s.mb.i]+=s.mb.o-1;used[s.mb.i+1]+=s.mb.o-1}
  if(s.pg!=null){if(s.pg<0||s.pg>n-1)return false;if(k==='ketone'){if(s.pg===0||s.pg===n-1)return false;used[s.pg]+=2}else if(TERMPG[k]){if(s.pg!==n-1)return false;used[s.pg]=4}else used[s.pg]+=1}
@@ -594,9 +613,10 @@ function brValid(s){const n=s.n,k=s.k;if(n<3||n>8)return false;
     const mbTouch=!!s.mb&&(segIdx.includes(s.mb.i)||segIdx.includes(s.mb.i+1));
     if(hasPG||mbTouch)continue;
     if(s.subs.some(y=>y!==x&&segIdx.includes(y.i)))return false;
-    if(x.t!=='me'&&x.t!=='et')return false}}
+    if(!STRAIGHT[x.t])return false}}
   if(k==='alkyne'&&s.mb&&(x.i===s.mb.i||x.i===s.mb.i+1))return false}
  for(let i=0;i<n;i++)if(used[i]>4)return false;
+ for(let i=0;i<n;i++){const al=s.subs.filter(x=>x.i===i&&ALKSUB[x.t]).map(x=>x.t);if(al.length>=2&&(al.includes('tbu')||(!al.includes('me')&&!al.every(t=>t==='et'||t==='pr'))))return false}
  // terminal carbons: at most one non-H substituent besides chain (keeps drawings clean)
  for(const e of [0,n-1]){const cnt=s.subs.filter(x=>x.i===e).length+(s.pg===e&&!TERMPG[k]?1:0);if(cnt>1)return false}
  // keep internal carbons to max 2 drawn substituents
@@ -608,13 +628,13 @@ function brNumbering(s){const n=s.n;const opts=[0,1].map(r=>{const L=i=>r?n-i:i+
   const pl=s.pg!=null&&s.k!=='alkane'&&s.k!=='halide'?L(s.pg):0;const ml=s.mb?Math.min(L(s.mb.i),L(s.mb.i+1)):0;
   const subs=s.subs.map(x=>({loc:L(x.i),nm:subName(x.t)}));
   const locs=subs.map(x=>x.loc).sort((a,b)=>a-b);
-  const alpha=subs.slice().sort((a,b)=>akey(a.nm).localeCompare(akey(b.nm))||a.loc-b.loc).map(x=>x.loc);
+  const alpha=subs.slice().sort((a,b)=>(akey(a.nm).localeCompare(akey(b.nm))||a.nm.localeCompare(b.nm))||a.loc-b.loc).map(x=>x.loc);
   return {r,pl,ml,locs,alpha,subs}});
  const cmp=(a,b)=>{for(let i=0;i<Math.max(a.length,b.length);i++){if((a[i]||0)!==(b[i]||0))return (a[i]||0)-(b[i]||0)}return 0};
  const [A,B]=opts;let c=A.pl-B.pl;if(!c)c=A.ml-B.ml;if(!c)c=cmp(A.locs,B.locs);if(!c)c=cmp(A.alpha,B.alpha);
  return {best:c<=0?A:B,other:c<=0?B:A,tie:c===0}}
 function brPrefix(subs,opt){opt=opt||{};const g={};subs.forEach(x=>{(g[x.nm]=g[x.nm]||[]).push(x.loc)});
- let names=Object.keys(g).sort((a,b)=>akey(a).localeCompare(akey(b)));if(opt.reverse)names=names.reverse();
+ let names=Object.keys(g).sort((a,b)=>(akey(a).localeCompare(akey(b))||a.localeCompare(b)));if(opt.reverse)names=names.reverse();
  return names.map(nm=>{const L=g[nm].sort((a,b)=>a-b);return `${L.join(',')}-${opt.noMult?'':MULT[L.length]}${nm}`}).join('-')}
 function brParent(s,pl,ml,nOverride){const n=nOverride||s.n,st=STX[n],k=s.k;
  switch(k){case 'alkane':case 'halide':return st+'ane';
@@ -630,16 +650,16 @@ function brName(s,opt){opt=opt||{};const N=brNumbering(s);const d=opt.wrongDir?N
 FAM.br={grp:'branched',build:brBuild,name:s=>brName(s),grpOf:s=>BRGRP[s.k],
  cls:s=>{if(s.k==='amine')return 1;const n=s.n;let c=(s.pg>0?1:0)+(s.pg<n-1?1:0)+s.subs.filter(x=>x.i===s.pg&&ALKSUB[x.t]).length;return Math.max(1,c)}};
 /* random generator for a class */
-const BR_N={alkane:[5,8],halide:[3,7],alkene:[4,7],alkyne:[4,7],alcohol:[3,7],aldehyde:[3,7],ketone:[4,7],acid:[3,7],ester:[3,6],amine:[3,6],amide:[3,6]};
+const BR_N={alkane:[5,10],halide:[3,9],alkene:[4,9],alkyne:[4,9],alcohol:[3,9],aldehyde:[3,9],ketone:[4,9],acid:[3,9],ester:[3,8],amine:[3,8],amide:[3,8]};
 function brRandom(k,opt){opt=opt||{};for(let tries=0;tries<400;tries++){const [a,b]=BR_N[k];const n=rnd(a,b);const s={f:'br',k,n,pg:null,mb:null,subs:[],flip:Math.random()<.5};
   if(k==='alkene'||k==='alkyne')s.mb={i:rnd(0,n-2),o:k==='alkene'?2:3};
   if(TERMPG[k])s.pg=n-1;else if(k==='ketone')s.pg=rnd(1,n-2);else if(k==='alcohol'||k==='amine')s.pg=rnd(0,n-1);
   if(k==='ester')s.b=rnd(1,3);
   const want=opt.min1?rnd(1,2):(k==='alkane'?rnd(2,3):rnd(1,3));
-  const pool=opt.alkylOnly&&k!=='halide'?['me','me','me','et','ipr']:['me','me','me','et','ipr','tbu','Cl','Br','F'];
+  const AP=['me','me','et','et','pr','pr','ipr','ipr','bu','bu','bu','sbu','sbu','sbu','tbu','tbu','ibu','ibu','ibu'];const pool=opt.alkylOnly&&k!=='halide'?AP:[...AP,'Cl','Br','F','Cl'];
   for(let j=0;j<want;j++){const t=k==='halide'&&j===0?pickOne(['Cl','Br','Cl','F','I']):pickOne(pool);s.subs.push({i:rnd(0,n-1),t})}
   if(!brValid(s))continue;
-  const big=s.subs.some(x=>x.t!=='me'&&ALKSUB[x.t]);if(!opt.min1&&s.subs.length<2&&!big)continue;
+  const big=s.subs.some(x=>x.t!=='me'&&ALKSUB[x.t]);if(!big&&Math.random()<.7)continue;if(!opt.min1&&s.subs.length<2&&!big)continue;
   if(k==='alkane'&&s.subs.length<2&&!big)continue;
   return s}
  return {f:'br',k:'alkane',n:6,pg:null,mb:null,subs:[{i:1,t:'me'},{i:3,t:'me'}]}}
@@ -651,13 +671,13 @@ function brWrongNames(s){const right=brName(s),out=new Set();const N=brNumbering
  if(new Set(s.subs.map(x=>subName(x.t))).size>1)tryAdd(brName(s,{reverse:true}));
  if(s.subs.length>new Set(s.subs.map(x=>subName(x.t))).size)tryAdd(brName(s,{noMult:true}));
  // wrong parent chain length (counted the straight drawing or included a branch)
- if(s.subs.some(x=>ALKSUB[x.t]))tryAdd(brName(s,{n:s.n+1>8?s.n-1:s.n+1}));
+ if(s.subs.some(x=>ALKSUB[x.t]))tryAdd(brName(s,{n:s.n+1>10?s.n-1:s.n+1}));
  // a structurally different but close compound
  for(let g=0;g<60&&out.size<5;g++){const m=brMutate(s);if(m)tryAdd(brName(m))}
  return shuf([...out])}
 function brMutate(s){const m=JSON.parse(JSON.stringify(s));const r=Math.random();
  if(r<.4&&m.subs.length){const x=pickOne(m.subs);x.i=x.i+(Math.random()<.5?1:-1)}
- else if(r<.6&&m.subs.length){const x=pickOne(m.subs);if(ALKSUB[x.t])x.t=x.t==='me'?'et':'me';else x.t=x.t==='Cl'?'Br':'Cl'}
+ else if(r<.6&&m.subs.length){const x=pickOne(m.subs);if(ALKSUB[x.t]){const SW={me:['et'],et:['me','pr'],pr:['et','ipr'],ipr:['pr','tbu'],bu:['sbu','pr'],sbu:['bu','ibu','tbu'],ibu:['sbu','tbu'],tbu:['ibu','ipr']};x.t=pickOne(SW[x.t])}else x.t=x.t==='Cl'?'Br':'Cl'}
  else if(r<.8){if(m.mb)m.mb.i+=Math.random()<.5?1:-1;else if(m.pg!=null&&!TERMPG[m.k])m.pg+=Math.random()<.5?1:-1;else m.n+=1}
  else{m.n+=Math.random()<.5?1:-1;if(TERMPG[m.k])m.pg=m.n-1}
  return brValid(m)?m:null}
@@ -670,10 +690,10 @@ function brWhy(s){const N=brNumbering(s).best,n=s.n,k=s.k;const steps=[];
  else if(N.ml)steps.push(`<b>2. Number:</b> from the end that gives the ${s.mb.o===2?'double':'triple'} bond the lowest number (C${N.ml}).`);
  else steps.push(`<b>2. Number:</b> from the end that gives the branches the lowest numbers (${N.locs.join(',')}).`);
  const g={};N.subs.forEach(x=>{(g[x.nm]=g[x.nm]||[]).push(x.loc)});
- const names=Object.keys(g).sort((a,b)=>akey(a).localeCompare(akey(b)));
- if(names.length)steps.push(`<b>3. Branches:</b> ${names.map(x=>`${MULT[g[x].length]}${x} at ${g[x].sort((a,b)=>a-b).join(', ')}`).join('; ')}. List them alphabetically${names.length>1?' (ignore di-, tri- and tert- when alphabetizing)':''}.`);
+ const names=Object.keys(g).sort((a,b)=>(akey(a).localeCompare(akey(b))||a.localeCompare(b)));
+ if(names.length)steps.push(`<b>3. Branches:</b> ${names.map(x=>`${MULT[g[x].length]}${x} at ${g[x].sort((a,b)=>a-b).join(', ')}`).join('; ')}. List them alphabetically${names.length>1?' (ignore di-, tri-, sec- and tert- when alphabetizing)':''}.`);
  steps.push(`<b>Name:</b> ${esc(brName(s))}`);return steps.join('<br>')}
-const BR_HINT='🏆 Challenge: (1) find the longest chain that holds the functional group, (2) number from the end nearest the functional group (then nearest the first branch), (3) list branches alphabetically; di-, tri- and tert- don\'t count.';
+const BR_HINT='🏆 Challenge: (1) find the longest chain that holds the functional group, (2) number from the end nearest the functional group (then nearest the first branch), (3) list branches alphabetically; di-, tri-, sec- and tert- don\'t count.';
 
 /* ---- question generators: return {kind,html,options:[{key,html}],answer,hint,why} ---- */
 function genSpot(){const g=spotBag();const fam=pickOne(GRP_R[g]);let s=R[fam]();const style=structStyle();
