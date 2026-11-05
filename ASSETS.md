@@ -1,5 +1,7 @@
 # Organic Origins: art request for ChatGPT
 
+**Status (Nov 5, 2026):** all art is in: logo, 5 mascot moods, every tile and badge, cut from ChatGPT's uncropped sticker sheets. The study hub card image is in the games repo.
+
 **Keep this game's colors.** Coral → peach (#e0675b → #ef9a6a) and sky blue → teal (#3f94c9 → #5bb7b0), with the pastel tile colors mint #e7f6e9, sky #e6f2ff, teal #e3f7f6 and lavender #f0e8fc. Navy outlines #2e2b38.
 
 **24 images total: 1 logo + 5 mascot moods + 4 tile badges + 14 achievement badges.** Bring them back and I'll wire them in. The game draws all its molecules in code, so don't make any chemical structures beyond what's listed.
