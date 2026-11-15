@@ -1259,7 +1259,7 @@ function nameWhy(s){const g=FAM[s.f].grp,n=nm(s),c=FAM[s.f].common?FAM[s.f].comm
 function genName(){if(useChallenge())return genNameBr();const f=nameBag();const s=R[f]();const style=structStyle();const others=distinctOptions(s,3);const opts=shuf([s,...others]).map(x=>({key:nm(x),html:nm(x)}));
  return {kind:'name',smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">What is the name of this compound?</p><div class="struct">${structHTML(s,style)}</div>`,options:opts,answer:nm(s),hint:'Find the functional group first, then count the carbons in the main chain and number from the end nearest the group.',why:nameWhy(s),cols:2}}
 function genMatch(){if(useChallenge())return genMatchBr();const f=nameBag();const s=R[f]();const others=distinctOptions(s,3);const opts=shuf([s,...others]).map(x=>({key:nm(x),html:optSVG(x),struct:true}));
- return {kind:'match',smi:smiles(bd(s)),sname:nm(s),optSmi:Object.fromEntries([s,...others].map(x=>[nm(x),smiles(bd(x))])),html:`<p class="prompt">Which structure is <strong>${esc(nm(s))}</strong>?</p><p class="footer-note">Pick the drawing that matches the name.</p>`,options:opts,answer:nm(s),hint:'Decode the name: the stem tells you the chain length, the ending tells you the functional group, and the number tells you where it is.',why:nameWhy(s),cols:2,struct:true}}
+ return {notes:Object.fromEntries(others.map(x=>[nm(x),drawNote(s,x)])),kind:'match',smi:smiles(bd(s)),sname:nm(s),optSmi:Object.fromEntries([s,...others].map(x=>[nm(x),smiles(bd(x))])),html:`<p class="prompt">Which structure is <strong>${esc(nm(s))}</strong>?</p><p class="footer-note">Pick the drawing that matches the name.</p>`,options:opts,answer:nm(s),hint:'Decode the name: the stem tells you the chain length, the ending tells you the functional group, and the number tells you where it is.',why:nameWhy(s),cols:2,struct:true}}
 
 /* ---- properties ---- */
 const BP=[{r:1,g:'London dispersion only',s:{f:'alkane',n:4},nm:'butane'},{r:2,g:'weak dipole–dipole (no H bonds)',s:{f:'ether',a:1,b:2},nm:'methoxyethane'},{r:3,g:'dipole–dipole (polar C=O)',s:{f:'aldehyde',n:3},nm:'propanal'},{r:4,g:'hydrogen bonding (–OH)',s:{f:'alcohol',n:3,p:1},nm:'1-propanol'},{r:5,g:'strong hydrogen bonding (–COOH, forms pairs)',s:{f:'acid',n:2},nm:'ethanoic acid'}];
@@ -1416,7 +1416,7 @@ function genNameBr(){const s=R.br(pickOne(Object.keys(BR_N)));const style=struct
  const opts=shuf([nm(s),...wrong]).map(x=>({key:x,html:esc(x)}));
  return {kind:'name',challenge:true,smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">${CHAL_TAG} What is the IUPAC name of this compound?</p><div class="struct">${structHTML(s,style)}</div>`,options:opts,answer:nm(s),hint:BR_HINT,why:brWhy(s),cols:2}}
 function genMatchBr(){const s=R.br(pickOne(Object.keys(BR_N)));const others=brDistinctSpecs(s,3);const all=[s,...others];
- return {kind:'match',challenge:true,smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">${CHAL_TAG} Which structure is <strong>${esc(nm(s))}</strong>?</p><p class="footer-note">Decode the name piece by piece: parent chain, functional group, then each branch.</p>`,options:shuf(all).map(x=>({key:nm(x),html:optSVG(x),struct:true})),answer:nm(s),hint:BR_HINT,why:brWhy(s),cols:2,struct:true}}
+ return {notes:Object.fromEntries(others.map(x=>[nm(x),drawNote(s,x)])),kind:'match',challenge:true,smi:smiles(bd(s)),sname:nm(s),html:`<p class="prompt">${CHAL_TAG} Which structure is <strong>${esc(nm(s))}</strong>?</p><p class="footer-note">Decode the name piece by piece: parent chain, functional group, then each branch.</p>`,options:shuf(all).map(x=>({key:nm(x),html:optSVG(x),struct:true})),answer:nm(s),hint:BR_HINT,why:brWhy(s),cols:2,struct:true}}
 
 /* ===== Blitz mode ===== */
 const BLITZ={on:false,end:0,score:0,n:0,streak:0,miss:[],timer:null,len:60,lock:false,q:null};
@@ -1506,25 +1506,25 @@ function genRank(){const k=rkBag();
  const head=t=>`<p class="prompt">${t}</p>`;
  if(k==='mass'){const r=rkPickMass();const items=r.p;const o=rkOptions(items,x=>x.bp,true);
   const srt=items.map((x,i)=>({x,i})).sort((a,b)=>a.x.bp-b.x.bp);
-  return {kind:'rank',noLetters:true,html:head(`These compounds have nearly the same molar mass (${r.band} g/mol). Rank them from <strong>LOWEST to HIGHEST boiling point</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,...o,
+  return {rk:{k:'mass',items,asc:true},kind:'rank',noLetters:true,html:head(`These compounds have nearly the same molar mass (${r.band} g/mol). Rank them from <strong>LOWEST to HIGHEST boiling point</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,...o,
    hint:'With similar molar masses, the strength of the attractions between molecules decides. Weakest to strongest: London forces only < polar with no O–H/N–H < polar C=O < N–H hydrogen bonds < O–H hydrogen bonds < carboxylic acid < amide.',
    why:'Lowest to highest: '+srt.map(({x,i})=>`${LT[i]} ${nm(x.s)} (${fmt(x.bp)}, ${RK_W[x.t]})`).join(' < ')+'.',cols:2}}
  if(k==='chain'){const F=pickOne(RK_CHAIN);const items=shuf(F.list).slice(0,3);const asc=Math.random()<.5;const o=rkOptions(items,x=>x.bp,asc);
   const srt=items.map((x,i)=>({x,i})).sort((a,b)=>asc?a.x.bp-b.x.bp:b.x.bp-a.x.bp);
-  return {kind:'rank',noLetters:true,html:head(`These ${F.fam} differ only in chain length. Rank them from <strong>${asc?'LOWEST to HIGHEST':'HIGHEST to LOWEST'} boiling point</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,...o,
+  return {rk:{k:'chain',items,asc},kind:'rank',noLetters:true,html:head(`These ${F.fam} differ only in chain length. Rank them from <strong>${asc?'LOWEST to HIGHEST':'HIGHEST to LOWEST'} boiling point</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,...o,
    hint:'Same functional group, so compare size. A longer chain has more surface for London dispersion forces, so it boils higher.',
    why:`Longer chains have stronger London dispersion forces. ${asc?'Lowest to highest':'Highest to lowest'}: `+srt.map(({x,i})=>`${LT[i]} ${nm(x.s)} (${fmt(x.bp)})`).join(asc?' < ':' > ')+'.',cols:2,
    options:o.options.map(z=>asc?z:{key:z.key,html:z.html.replace(/&lt;/g,'&gt;')}),answer:o.answer}}
  if(k==='branch'){const F=pickOne(RK_BRANCH);const items=shuf(F.list);const o=rkOptions(items,x=>x.bp,true);
   const srt=items.map((x,i)=>({x,i})).sort((a,b)=>a.x.bp-b.x.bp);
-  return {kind:'rank',noLetters:true,html:head(`These are isomers (${F.what}), so they have the same molar mass. Rank them from <strong>LOWEST to HIGHEST boiling point</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,...o,
+  return {rk:{k:'branch',items,asc:true},kind:'rank',noLetters:true,html:head(`These are isomers (${F.what}), so they have the same molar mass. Rank them from <strong>LOWEST to HIGHEST boiling point</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,...o,
    hint:'Isomers have the same mass, so look at shape. More branching makes a molecule more compact, with less surface touching its neighbors, so it boils lower.',
    why:'More branching means less surface contact and a lower boiling point. Lowest to highest: '+srt.map(({x,i})=>`${LT[i]} ${nm(x.s)} (${fmt(x.bp)}, ${x.d})`).join(' < ')+'.',cols:2}}
  /* solubility: rank most to least soluble */
  let items=null;for(let g=0;g<300&&!items;g++){const p=shuf(RK_SOL).slice(0,3);if(p.filter(x=>x.sol===Infinity).length>1)continue;if(p.filter(x=>x.hc).length>1)continue;
   const s=p.slice().sort((a,b)=>b.sol-a.sol);if(s[0].sol!==Infinity&&s[0].sol/s[1].sol<2.5)continue;if(s[0].sol===Infinity&&s[1].sol>30)continue;if(s[1].sol/s[2].sol<2.5)continue;items=p}
  const o=rkOptions(items,x=>x.sol,false);const srt=items.map((x,i)=>({x,i})).sort((a,b)=>b.x.sol-a.x.sol);
- return {kind:'rank',noLetters:true,html:head(`Rank these compounds from <strong>MOST to LEAST soluble in water</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,
+ return {rk:{k:'sol',items,asc:false},kind:'rank',noLetters:true,html:head(`Rank these compounds from <strong>MOST to LEAST soluble in water</strong>.`)+`<div class="rankrow">${items.map(rkCard).join('')}</div>`,
   answer:o.answer,options:o.options.map(z=>({key:z.key,html:z.html.replace(/&lt;/g,'&gt;')})),
   hint:'Water dissolves the polar –OH or –COOH part. The hydrocarbon part is nonpolar: the longer it is, the less the compound dissolves. A hydrocarbon with no polar group barely dissolves at all.',
   why:'Most to least soluble: '+srt.map(({x,i})=>`${LT[i]} ${nm(x.s)} (${solTxt(x.sol)})`).join(' > ')+'. A polar group that hydrogen bonds with water helps; each extra carbon in the nonpolar chain hurts.',cols:2}}
@@ -1589,11 +1589,11 @@ function genIso(){const k=isoBag();
    :r==='not'?`Different molecular formulas (${f0} and ${f1}), so they are not isomers. Isomers must have exactly the same formula.`
    :`Same formula (${f0}) but the atoms are connected differently (${nm(pair[0])} vs ${nm(pair[1])}), so they are constitutional isomers. ${ISO_TWHY[r]}`;
   return {kind:'iso',html:`<p class="prompt">How are these two structures related?</p><div class="rankrow">${isoDraw(pair[0],sa)}${isoDraw(pair[1],sb)}</div>`,
-   options:['Same compound','Constitutional isomers','Not isomers'].map(o=>({key:o,html:o})),answer:ans,cols:3,
+   options:['Same compound','Constitutional isomers','Not isomers'].map(o=>({key:o,html:o})),answer:ans,cols:3,notes:isoRelNotes(r,pair,f0,f1),
    hint:'Step 1: count C, H, O, N and halogens in each. Different formula → not isomers. Step 2: same formula? Name both. Same name → same compound; different names → constitutional isomers.',why}}
  if(k==='type'){const r=typeBag();const pair=isoPair(r);if(!pair)return genIso();const [sa,sb]=twoStyles();const f0=molFormula(bd(pair[0]));
   return {kind:'iso',html:`<p class="prompt">These two compounds are constitutional isomers (both ${fmlHTML(f0)}). What kind?</p><div class="rankrow">${isoDraw(pair[0],sa)}${isoDraw(pair[1],sb)}</div>`,
-   options:Object.entries(ISO_TYPE).map(([key,t])=>({key:t,html:`<b>${t}</b><small class="isosub">${key==='pos'?'same chain, group moved':key==='chain'?'different carbon skeleton':'different functional group'}</small>`})),answer:ISO_TYPE[r],cols:3,
+   options:Object.entries(ISO_TYPE).map(([key,t])=>({key:t,html:`<b>${t}</b><small class="isosub">${key==='pos'?'same chain, group moved':key==='chain'?'different carbon skeleton':'different functional group'}</small>`})),answer:ISO_TYPE[r],cols:3,notes:isoTypeNotes(r,pair),
    hint:'Same functional group? If not → functional group isomers. If yes: same carbon chain with the group moved → position isomers; a different (branched vs straight) chain → chain isomers.',
    why:`${nm(pair[0])} and ${nm(pair[1])}: ${ISO_TWHY[r]}`}}
  /* pick: which one is an isomer of the target */
@@ -1605,7 +1605,7 @@ function genIso(){const k=isoBag();
   if(wr.length<(same?2:3))continue;
   const opts=shuf([{s:iso,k:'iso'},...wr.map(s=>({s,k:'w'})),...(same?[{s:same,k:'same'}]:[])]);
   return {kind:'iso',html:`<p class="prompt">Which structure is an <strong>isomer</strong> of the compound below? <span class="isosub">(target: ${fmlHTML(F)})</span></p><div class="rankrow">${isoDraw(tgt,'skeletal')}</div>`,
-   options:opts.map((o,i)=>({key:'o'+i+':'+nm(o.s),html:optSVG(o.s)})),answer:'o'+opts.findIndex(o=>o.k==='iso')+':'+nm(iso),cols:2,struct:true,specs:[tgt,...opts.map(o=>o.s)],
+   options:opts.map((o,i)=>({key:'o'+i+':'+nm(o.s),html:optSVG(o.s)})),answer:'o'+opts.findIndex(o=>o.k==='iso')+':'+nm(iso),cols:2,struct:true,specs:[tgt,...opts.map(o=>o.s)],notes:Object.fromEntries(opts.map((o,i)=>[o,i]).filter(([o])=>o.k!=='iso').map(([o,i])=>['o'+i+':'+nm(o.s),o.k==='same'?`That is the target itself (${esc(nm(tgt))}), drawn a different way. An isomer has the same formula but a different structure.`:`That is ${esc(nm(o.s))}, ${fmlHTML(molFormula(bd(o.s)))}. The target is ${fmlHTML(F)}; an isomer must have exactly the same formula.`])),
    hint:'An isomer has the same molecular formula but a different structure. Count the atoms in each choice. A redrawn copy of the same molecule is not an isomer.',
    why:`${nm(iso)} has the same formula (${F}) as ${nm(tgt)} but a different structure. ${ISO_TWHY[r]}${same?' One choice is the same molecule redrawn, which is not an isomer.':''} The other choices have different formulas.`}}
  return genIso()}
@@ -1613,6 +1613,47 @@ function genIso(){const k=isoBag();
 const GEN={spot:genSpot,classify:genClassify,name:genName,match:genMatch,react:genReact,props:genProps,rank:genRank,iso:genIso,med:genMed,blitz:genSpot};
 
 /* ===== UI state, journey, rendering ===== */
+
+/*FG-NOTES-START*/
+/* Wrong-pick reasons for Rank It, Isomer Sorter and Draw It (2026-11-14). */
+const grpName = sp => { const g = FAM[sp.f] && FAM[sp.f].grp; return (GN[g] || g || 'compound').toLowerCase(); };
+const aAn = w => (/^[aeiou]/i.test(w) ? 'an ' : 'a ') + w;
+function isoRelNotes(r, pair, f0, f1) {
+  const n0 = esc(nm(pair[0])), n1 = esc(nm(pair[1])), F0 = fmlHTML(f0), F1 = fmlHTML(f1);
+  if (r === 'same') return { 'Constitutional isomers': `Both drawings are ${n0}: same formula and same name, so they are the same compound drawn differently.`, 'Not isomers': `Both have the formula ${F0}, and both are ${n0}.` };
+  if (r === 'not') { const t = `Count the atoms: the formulas are ${F0} and ${F1}. Isomers, and the same compound, need exactly the same formula.`; return { 'Same compound': t, 'Constitutional isomers': t }; }
+  return { 'Same compound': `The formula is the same (${F0}), but the names differ (${n0} vs ${n1}), so the atoms are connected differently.`, 'Not isomers': `Count again: both are ${F0}. The same formula with a different structure means isomers.` };
+}
+function isoTypeNotes(r, pair) {
+  const g0 = grpName(pair[0]), g1 = grpName(pair[1]), out = {};
+  if (r !== 'fg') out[ISO_TYPE.fg] = `Both compounds have the same functional group (${aAn(g0)}), so they are not functional group isomers.`;
+  if (r !== 'pos') out[ISO_TYPE.pos] = r === 'chain' ? 'The carbon skeleton itself is different (the longest chain or the branching changes), not just the position of the group.' : `The functional groups are different (${aAn(g0)} vs ${aAn(g1)}), so this is more than a change in position.`;
+  if (r !== 'chain') out[ISO_TYPE.chain] = r === 'pos' ? 'The carbon skeleton is the same; only the position of the functional group changes.' : `The functional groups are different (${aAn(g0)} vs ${aAn(g1)}).`;
+  return out;
+}
+function drawNote(s, x) {
+  const head = `That drawing is ${esc(nm(x))}. `, gs = grpName(s), gx = grpName(x);
+  if (gs !== gx) return head + `It is ${aAn(gx)}, but the name ${esc(nm(s))} is ${aAn(gs)}: check the ending.`;
+  return head + (molFormula(bd(s)) !== molFormula(bd(x)) ? 'Same functional group, but a different number of carbons. Count the carbons in the main chain and in any groups named in front (such as methyl, ethyl or N-methyl).' : 'Same functional group and the same formula, but the carbons are arranged differently. Check the position number and the groups named in front of the main chain.');
+}
+function rankNote(rk, key, answer) {
+  const lt = k => k.split(' < ').map(c => LT.indexOf(c));
+  const P = lt(key), T = lt(answer), pos = i => T.indexOf(i);
+  if (key === T.slice().reverse().map(i => LT[i]).join(' < ')) return rk.asc ? 'That is the right order backwards: the question asks from lowest to highest.' : 'That is the right order backwards: the question asks from most to least soluble.';
+  let a = -1, b = -1; for (let i = 0; i < 2; i++) if (pos(P[i]) > pos(P[i + 1])) { a = P[i]; b = P[i + 1]; break; }
+  if (a < 0) return '';
+  const X = rk.items[a], Y = rk.items[b], L = i => LT[i] + ' ' + esc(nm(rk.items[i].s));
+  if (rk.k === 'sol') { const more = Y, less = X; return `${L(b)} is more soluble than ${L(a)}: ${less.hc ? esc(nm(less.s)) + ' has no polar group, so it barely dissolves.' : esc(nm(more.s)) + ' has a smaller nonpolar part (or a more polar group), so water holds on to it better.'}`; }
+  const lo = X.bp < Y.bp ? a : b, hi = lo === a ? b : a;
+  const why = rk.k === 'mass' ? `${esc(nm(rk.items[lo].s))} has ${RK_W[rk.items[lo].t]}, which is weaker than the ${RK_W[rk.items[hi].t]} in ${esc(nm(rk.items[hi].s))}.`
+    : rk.k === 'chain' ? `${esc(nm(rk.items[hi].s))} has the longer chain, so it has stronger London forces.`
+    : `${esc(nm(rk.items[lo].s))} is more branched (${rk.items[lo].d}), so it is more compact and has weaker London forces.`;
+  return `${L(lo)} boils lower than ${L(hi)}: ${why}`;
+}
+const _genRank = genRank;
+genRank = function () { const q = _genRank(); if (q && q.rk) { q.notes = {}; q.options.forEach(o => { if (o.key !== q.answer) { const n = rankNote(q.rk, o.key, q.answer); if (n) q.notes[o.key] = n; } }); } return q; };
+GEN.rank = genRank;
+/*FG-NOTES-END*/
 const MODES=[
  {id:'spot',title:'Spot the Group',short:'Identify the functional group',icon:'<circle cx="21" cy="21" r="11"/><path d="m30 30 12 12"/>'},
  {id:'classify',title:'1° 2° 3°',short:'Classify alcohols, amines, amides',icon:'<path d="M24 8v12M24 20 12 38M24 20l12 18"/><circle cx="24" cy="8" r="3"/><circle cx="12" cy="38" r="3"/><circle cx="36" cy="38" r="3"/>'},
@@ -1781,9 +1822,9 @@ function finish(){ddLog(!state.revealed);state.done=true;['checkBtn','hintBtn','
  else{state.correct++;state.streak++;confetti();fb('good','✅ Correct! '+q.why);awardXP(false);mascot(state.streak>=3?'wow':'happy',3500)}updateStats()}
 
 /* wrong-choice reason for the current question, from the shared question bank */
-function qbWhyQ(q,k){try{const sk={spot:'spot-group',classify:'classify-degree',name:'name',props:'properties',med:'med-molecules'}[q.mode||state.mode];if(!sk||!q.options)return '';const t=o=>o.struct?o.key:/class="medopt"/.test(o.html)?'Label '+o.key:o.html,o=q.options,a=o.find(x=>x.key===q.answer),p=o.find(x=>x.key===k);if(!a||!p)return '';return qbWhy({skill:'functionalgroups.'+sk,prompt:q.html,choices:o.map(t),answer:t(a),explain:q.why||''},t(p),{})}catch(e){return ''}}
+function qbWhyQ(q,k){try{const sk={spot:'spot-group',blitz:'spot-group',classify:'classify-degree',name:'name',props:'properties',med:'med-molecules'}[q.mode||state.mode];if(!sk||!q.options)return '';const t=o=>o.struct?o.key:/class="medopt"/.test(o.html)?'Label '+o.key:o.html,o=q.options,a=o.find(x=>x.key===q.answer),p=o.find(x=>x.key===k);if(!a||!p)return '';return qbWhy({skill:'functionalgroups.'+sk,prompt:q.html,choices:o.map(t),answer:t(a),explain:q.why||''},t(p),{})}catch(e){return ''}}
 function check(){if(state.done)return;if(!state.selected){fb('bad','Choose an answer first.');return}
- if(state.selected!==state.q.answer){const qw=qbWhyQ(state.q,state.selected);if(!state.q.firstSlip){try{state.q.firstSlip=ooSlip(state.q,state.selected)}catch(e){}}ddLog(false);state.streak=0;updateStats();mascot('hmm',2600);$('questionArea').querySelectorAll('.option').forEach(b=>{if(b.dataset.key===state.selected){b.classList.add('wrong');b.classList.remove('selected')}});state.selected=null;fb('bad','🔎 Not quite. '+(qw||esc(state.q.hint)));return}
+ if(state.selected!==state.q.answer){const pk=state.selected,qw=qbWhyQ(state.q,state.selected);if(!state.q.firstSlip){try{state.q.firstSlip=ooSlip(state.q,state.selected)}catch(e){}}ddLog(false);state.streak=0;updateStats();mascot('hmm',2600);$('questionArea').querySelectorAll('.option').forEach(b=>{if(b.dataset.key===state.selected){b.classList.add('wrong');b.classList.remove('selected')}});state.selected=null;fb('bad','🔎 Not quite. '+((state.q.notes&&state.q.notes[pk])||qw||esc(state.q.hint)));return}
  finish()}
 function hint(){if(state.done)return;$('hintBox').textContent='💡 '+state.q.hint;$('hintBox').className='hintbox show'}
 function show(){if(state.done)return;state.revealed=true;state.selected=state.q.answer;finish()}
