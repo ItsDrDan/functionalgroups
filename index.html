@@ -957,6 +957,8 @@ function c2SubBlock(sb){const nn=sb.node;
  if(nn.tail==='ipr')return {levels:['CH','CH3'],side:{lvl:0,r:'CH3'},b:sb.b,el:'C'};
  if(nn.tail==='tbu')return {levels:['C','CH3'],side:{lvl:0,r:'CH3',l:'H3C'},b:sb.b,el:'C'};
  const t=nn.el==='C'?(nn.cond||'CH3'):(nn.cond||nn.draw||nn.el);return {levels:[t],side:null,b:sb.b,el:nn.el}}
+/* Screen-reader label (2026-11-14): the condensed formula the drawing shows, never the name. Tested by tools/check-a11y.js. */
+function fgAlt(m){try{const t=condHTML(m).replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/\s+/g,'');if(t)return 'Structure with condensed formula '+t}catch(e){}return 'Chemical structure'}
 function condensed2D(m,opt){opt=opt||{};const S='#2d3f4b',GAP=22,LV=46;const col=el=>ECOL[el]||S;
  const nodes=m.chain.map((n,i)=>({n,t:c2NodeText(m,n,i)}));
  // decide up/down for subs: =O up; two subs: one up one down; else alternate starting down
@@ -984,7 +986,7 @@ function condensed2D(m,opt){opt=opt||{};const S='#2d3f4b',GAP=22,LV=46;const col
     y=yy;minY=Math.min(minY,yy-16);maxY=Math.max(maxY,yy+16)})})});
  let minX=0,maxX=x-GAP;out.forEach(o=>{if(o.blocks.length){minX=Math.min(minX,o.ax-o.L);maxX=Math.max(maxX,o.ax+o.R)}});
  const pad=12,vx=minX-pad,vy=minY-pad,w=maxX-minX+2*pad,h=maxY-minY+2*pad,sc=opt.scale||1;
- return `<svg class="mol cond2d" viewBox="${vx.toFixed(0)} ${vy.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="Condensed structure with branches drawn" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`}
+ return `<svg class="mol cond2d" viewBox="${vx.toFixed(0)} ${vy.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="${esc(fgAlt(m))}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`}
 
 function svgMol(m,opt){opt=opt||{};const lay=layout(m),pts=[];const S='#2d3f4b';let body='';
  const line=(x1,y1,x2,y2,w)=>`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${S}" stroke-width="${w||2.4}" stroke-linecap="round"/>`;
@@ -1000,7 +1002,7 @@ function svgMol(m,opt){opt=opt||{};const lay=layout(m),pts=[];const S='#2d3f4b';
  const lt=labs.map(([t,p,e])=>labelSVG(t,p.x,p.y,ECOL[e]||S,null,e)).join('');
  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),pad=opt.pad||24;let x0=Math.min(...xs)-pad,x1=Math.max(...xs)+pad+8,y0=Math.min(...ys)-pad,y1=Math.max(...ys)+pad;
  const w=x1-x0,h=y1-y0,sc=opt.scale||1;
- return `<svg class="mol" viewBox="${x0.toFixed(0)} ${y0.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="${esc(opt.alt||'Chemical structure')}" xmlns="http://www.w3.org/2000/svg">${ring}${body}${lt}</svg>`}
+ return `<svg class="mol" viewBox="${x0.toFixed(0)} ${y0.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}" width="${(w*sc).toFixed(0)}" height="${(h*sc).toFixed(0)}" role="img" aria-label="${esc(opt.alt||fgAlt(m))}" xmlns="http://www.w3.org/2000/svg">${ring}${body}${lt}</svg>`}
 
 const SYM=e=>e;
 function smiles(m){let s='';const sub=(sb)=>{const nn=sb.node;return '('+(sb.b===2?'=':sb.b===3?'#':'')+(nn.smi||SYM(nn.el))+')'};
@@ -1114,7 +1116,7 @@ const CONF={alkane:['alkene','alkyne','aromatic','halide'],alkene:['alkane','alk
 const GRP_R={alkane:['alkane'],alkene:['alkene'],alkyne:['alkyne'],halide:['halo'],aromatic:['arene'],alcohol:['alcohol','alcohol','alcohol3'],ether:['ether'],aldehyde:['aldehyde'],ketone:['ketone'],acid:['acid'],ester:['ester'],amine:['amine1','amine2','amine3'],amide:['amide1','amide2','amide3']};
 function bag(list){let b=[],last=null;return ()=>{if(!b.length){b=shuf(list);if(b[b.length-1]===last&&b.length>1)b.unshift(b.pop())}last=b.pop();return last}}
 const spotBag=bag(Object.keys(GN)),nameBag=bag(['alkane','alkene','alkyne','halo','alcohol','alcohol3','ether','aldehyde','ketone','acid','ester','amine1','amine2','amine3','amide1','amide2','amide3']),clsBag=bag(['alcohol','alcohol3','amine1','amine2','amine3','amide1','amide2','amide3']),propsBag=bag(['bp','imf','sol','imf']),reactBag=bag(['ox1ald','ox1acid','ox2','ox3','ester','hydrolysis','hydrogenation','hydration','reduction','amide','neutral','amineHCl']);
-function structHTML(s,style,scale){const m=bd(s);if(style==='condensed')return `<div class="condensed" aria-label="Condensed structure">${condHTML(m)}</div>`;if(style==='cond2d')return condensed2D(m,{scale:scale||1});return svgMol(m,{scale:scale||1,alt:'Skeletal structure'})}
+function structHTML(s,style,scale){const m=bd(s);if(style==='condensed')return `<div class="condensed" aria-label="Condensed structure">${condHTML(m)}</div>`;if(style==='cond2d')return condensed2D(m,{scale:scale||1});return svgMol(m,{scale:scale||1})}
 function structStyle(){const v=state.style;if(v!=='mixed')return v;const r=Math.random();return r<.42?'skeletal':r<.7?'condensed':'cond2d'}
 function optSVG(s){return svgMol(bd(s),{scale:.9,pad:16})}
 const partsHTML=(parts,scale)=>parts.map(p=>p.mol?svgMol(p.mol,{scale:scale||.85,pad:14}):`<span class="ptext">${p.t}</span>`).join('<span class="plus">+</span>');
